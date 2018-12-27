@@ -1,7 +1,6 @@
 package dataRecording;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import pacman.game.Constants;
 import pacman.game.Constants.DM;
@@ -49,7 +48,7 @@ public class ID3DataTuple {
 	
 	public boolean isGhostClose;
 	public MOVE directionToClosestPill;
-	public int DISTANCE_CLOSE = 20;
+	public int DISTANCE_CLOSE = 40;
 
 	// Util data - useful for normalization
 	private int maximumDistance = 150;
@@ -91,6 +90,20 @@ public class ID3DataTuple {
 		
 		this.isGhostClose = isGhostClose(game);
 		this.directionToClosestPill = directionToClosesPill(game);
+		
+		attributeValues = new String[12];
+		attributeValues[0] = DirectionChosen.name();
+		attributeValues[1] = String.valueOf(pacmanPosition);
+		attributeValues[2] = String.valueOf(blinkyDist);
+		attributeValues[3] = String.valueOf(inkyDist);
+		attributeValues[4] = String.valueOf(pinkyDist);
+		attributeValues[5] = String.valueOf(sueDist);
+		attributeValues[6] = blinkyDir.name();
+		attributeValues[7] = inkyDir.name();
+		attributeValues[8] = pinkyDir.name();
+		attributeValues[9] = sueDir.name();
+		attributeValues[10] = String.valueOf(isGhostClose);
+		attributeValues[11] = directionToClosestPill.name();
 
 	}
 	

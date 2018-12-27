@@ -11,7 +11,6 @@ import java.util.List;
 import dataRecording.ID3DataTuple;
 import id3.id3Main.Settings;
 import id3.id3Pojo.Attribute;
-import id3.id3Pojo.DataTuple;
 
 import java.lang.Math;
 
@@ -111,6 +110,7 @@ public class HelperClass {
 
 		for (int i = 0; i < attr.getNumberOfValues(); i++) {
 			double subSetSize = splitData.get(i).size();
+			if(subSetSize==0) continue;		
 			double setSize = tuples.size();
 			gain -= (subSetSize / setSize) * calculateEntropy(getLableRatios(splitData.get(i)));
 		}
