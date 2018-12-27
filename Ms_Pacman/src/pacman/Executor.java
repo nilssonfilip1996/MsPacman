@@ -51,7 +51,7 @@ public class Executor
 		int numTrials=10;			// trials for testing
 		
 		// ********* OUR MS PACMAN **********
-		//exec.runGameTimed(new ID3PacMan(),new StarterGhosts(),visual);
+		exec.runGameTimed(new ID3PacMan(),new StarterGhosts(),visual);
 		
 		// ********* DATA COLLECTION ********
 		// exec.runGameTimed(new DataCollectorController(new KeyBoardInput()),new StarterGhosts(),visual);
