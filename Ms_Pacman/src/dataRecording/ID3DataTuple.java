@@ -1,5 +1,7 @@
 package dataRecording;
 
+import java.util.ArrayList;
+
 import pacman.game.Constants;
 import pacman.game.Constants.DM;
 import pacman.game.Constants.GHOST;
@@ -41,6 +43,10 @@ public class ID3DataTuple {
 	public MOVE inkyDir;
 	public MOVE pinkyDir;
 	public MOVE sueDir;
+	
+	public boolean isGhostClose;
+	public int directionToClosestPill;
+	public int DISTANCE_CLOSE = 20;
 
 	// Util data - useful for normalization
 	private int maximumDistance = 150;
@@ -74,6 +80,9 @@ public class ID3DataTuple {
 		this.inkyDir = game.getNextMoveTowardsTarget(game.getPacmanCurrentNodeIndex(), game.getGhostCurrentNodeIndex(GHOST.INKY), DM.PATH);
 		this.pinkyDir = game.getNextMoveTowardsTarget(game.getPacmanCurrentNodeIndex(), game.getGhostCurrentNodeIndex(GHOST.PINKY), DM.PATH);
 		this.sueDir = game.getNextMoveTowardsTarget(game.getPacmanCurrentNodeIndex(), game.getGhostCurrentNodeIndex(GHOST.SUE), DM.PATH);
+		
+		this.isGhostClose = isGhostClose(game);
+		this.directionToClosestPill = directionToClosesPill(game);
 
 	}
 
@@ -91,7 +100,52 @@ public class ID3DataTuple {
 		this.inkyDir = MOVE.valueOf(dataSplit[7]);
 		this.pinkyDir = MOVE.valueOf(dataSplit[8]);
 		this.sueDir = MOVE.valueOf(dataSplit[9]);
+		
+		this.isGhostClose = Boolean.parseBoolean(dataSplit[10]);
+		this.directionToClosestPill = Integer.parseInt(dataSplit[11]);
 		//Add custom attributes
+	}
+	
+	public boolean isGhostClose(Game game) {
+		int current=game.getPacmanCurrentNodeIndex();
+		
+		for(GHOST ghost : GHOST.values())
+			if(game.getGhostEdibleTime(ghost)==0 && game.getGhostLairTime(ghost)==0)
+				if(game.getShortestPathDistance(current,game.getGhostCurrentNodeIndex(ghost))<DISTANCE_CLOSE) {
+					isGhostClose = true;
+				}
+				else {
+					isGhostClose = false;
+				}
+		return isGhostClose;
+	}
+	
+	// have to cast MOVES
+	public int directionToClosesPill(Game game) {
+		int current=game.getPacmanCurrentNodeIndex();
+		
+		int[] pills=game.getPillIndices();
+		int[] powerPills=game.getPowerPillIndices();		
+		
+		ArrayList<Integer> targets=new ArrayList<Integer>();
+		
+		for(int i=0;i<pills.length;i++)					//check which pills are available			
+			if(game.isPillStillAvailable(i))
+				targets.add(pills[i]);
+		
+		for(int i=0;i<powerPills.length;i++)				//check with power pills are available
+			if(game.isPowerPillStillAvailable(i))
+				targets.add(powerPills[i]);				
+		
+		int[] targetsArray=new int[targets.size()];		//convert from ArrayList to array
+		
+		for(int i=0;i<targetsArray.length;i++)
+			targetsArray[i]=targets.get(i);
+		
+		//return the next direction once the closest target has been identified
+		return game.getNextMoveTowardsTarget(current,game.getClosestNodeIndexFromNodeIndex(current,targetsArray,DM.PATH),DM.PATH).ordinal();
+		//return 0;
+
 	}
 
 	public String getSaveString() {
@@ -107,6 +161,8 @@ public class ID3DataTuple {
 		stringbuilder.append(this.inkyDir + ";");
 		stringbuilder.append(this.pinkyDir + ";");
 		stringbuilder.append(this.sueDir + ";");
+		stringbuilder.append(this.isGhostClose + ";");
+		stringbuilder.append(this.directionToClosestPill + ";");
 
 		return stringbuilder.toString();
 	}
