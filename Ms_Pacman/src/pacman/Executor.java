@@ -24,6 +24,7 @@ import pacman.controllers.examples.RandomNonRevPacMan;
 import pacman.controllers.examples.RandomPacMan;
 import pacman.controllers.examples.StarterGhosts;
 import pacman.controllers.examples.StarterPacMan;
+import pacman.entries.pacman.ID3PacMan;
 import pacman.game.Game;
 import pacman.game.GameView;
 
@@ -46,11 +47,17 @@ public class Executor
 	public static void main(String[] args)
 	{
 		Executor exec=new Executor();
-
+		boolean visual=true;
+		int numTrials=10;			// trials for testing
 		
-		//run multiple games in batch mode - good for testing.
-		int numTrials=10;
-//		exec.runExperiment(new RandomPacMan(),new RandomGhosts(),numTrials);
+		// ********* OUR MS PACMAN **********
+		//exec.runGameTimed(new ID3PacMan(),new StarterGhosts(),visual);
+		
+		// ********* DATA COLLECTION ********
+		// exec.runGameTimed(new DataCollectorController(new KeyBoardInput()),new StarterGhosts(),visual);
+		
+		// ********* TRIAL IN BATCH MODE ****	
+		//exec.runExperiment(new ID3PacMan(),new StarterGhosts(),numTrials);
 		 
 		
 		/*
@@ -62,7 +69,7 @@ public class Executor
 		
 		///*
 		//run the game in asynchronous mode.
-		boolean visual=true;
+
 //		exec.runGameTimed(new NearestPillPacMan(),new AggressiveGhosts(),visual);
 //		exec.runGameTimed(new StarterPacMan(),new StarterGhosts(),visual);
 //		exec.runGameTimed(new HumanController(new KeyBoardInput()),new StarterGhosts(),visual);	
@@ -85,7 +92,8 @@ public class Executor
 		 */
 		
 		//run game for data collection
-		exec.runGameTimed(new DataCollectorController(new KeyBoardInput()),new StarterGhosts(),visual);
+		//--> starter pacman //
+		// exec.runGameTimed(new DataCollectorController(new KeyBoardInput()),new StarterGhosts(),visual);
 	}
 	
     /**
