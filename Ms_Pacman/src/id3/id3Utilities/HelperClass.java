@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import dataRecording.ID3DataTuple;
 import id3.id3Main.Settings;
 import id3.id3Pojo.Attribute;
 import id3.id3Pojo.DataTuple;
@@ -15,8 +16,8 @@ import java.lang.Math;
 
 public class HelperClass {
 
-	public static ArrayList<DataTuple> getALFromFile(String fileDir) {
-		ArrayList<DataTuple> tuples = new ArrayList<>();
+	public static ArrayList<ID3DataTuple> getALFromFile(String fileDir) {
+		ArrayList<ID3DataTuple> tuples = new ArrayList<>();
 		FileInputStream fstream;
 		try {
 			fstream = new FileInputStream(fileDir);
@@ -24,8 +25,7 @@ public class HelperClass {
 			BufferedReader br = new BufferedReader(new InputStreamReader(in));
 			String strLine;
 			while ((strLine = br.readLine()) != null) {
-				String[] tokens = strLine.split(" ");
-				tuples.add(new DataTuple(tokens, tokens[0], tokens[1], tokens[2], tokens[3], tokens[4]));
+				tuples.add(new ID3DataTuple(strLine));
 			}
 			in.close();
 			return tuples;
@@ -157,26 +157,17 @@ public class HelperClass {
 		ArrayList<Attribute> attributes = new ArrayList<>();
 
 		ArrayList<String> attrValues = new ArrayList<>();
-		attrValues.add("Youth");
-		attrValues.add("Middle_aged");
-		attrValues.add("Senior");
-		attributes.add(new Attribute(0, "Age", attrValues));
+		attrValues.add("0");											//False
+		attrValues.add("1");											//True
+		attributes.add(new Attribute(0, "isGhostClose", attrValues));
 
 		ArrayList<String> attrValues1 = new ArrayList<>();
-		attrValues1.add("High");
-		attrValues1.add("Medium");
-		attrValues1.add("Low");
-		attributes.add(new Attribute(1, "Income", attrValues1));
-
-		ArrayList<String> attrValues2 = new ArrayList<>();
-		attrValues2.add("Yes");
-		attrValues2.add("No");
-		attributes.add(new Attribute(2, "Student", attrValues2)); 
-
-		ArrayList<String> attrValues3 = new ArrayList<>();
-		attrValues3.add("Excellent");
-		attrValues3.add("Fair");
-		attributes.add(new Attribute(3, "CR_rating", attrValues3));
+		attrValues1.add("UP");
+		attrValues1.add("RIGHT");
+		attrValues1.add("DOWN");
+		attrValues1.add("LEFT");
+		attrValues1.add("NEUTRAL");
+		attributes.add(new Attribute(1, "closestPillDir", attrValues1));
 
 		return attributes;
 	}

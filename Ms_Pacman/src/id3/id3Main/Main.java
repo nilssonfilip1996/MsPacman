@@ -19,7 +19,8 @@ public class Main {
 	
 	public Main() {
 		ArrayList<DataTuple> tuples;
-		tuples = HelperClass.getALFromFile("myData/testData.txt");
+		//tuples = HelperClass.getALFromFile("myData/testData.txt");
+		tuples = null;
 		ArrayList<Attribute> attributes = HelperClass.generateAttributes(); 
 		ArrayList<Attribute> attributesTemp = HelperClass.getAttributeListCopy(attributes);
 		Node node = generateTree(tuples, attributesTemp);
