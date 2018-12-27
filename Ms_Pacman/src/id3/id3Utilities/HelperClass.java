@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import dataRecording.ID3DataTuple;
 import id3.id3Main.Settings;
@@ -41,19 +42,19 @@ public class HelperClass {
 			return true;
 		}
 		for (int i = 0; i < tuples.size() - 1; i++) {
-			if (!(tuples.get(i).DirectionChosen.ordinal()==tuples.get(i + 1).DirectionChosen.ordinal())) {
+			if (!(tuples.get(i).DirectionChosen.name().equals(tuples.get(i + 1).DirectionChosen.name()))) {
 				return false;
 			}
 		}
 		return true;
 	}
-	
-	//Fixed for Pac-man
+
+	// Fixed for Pac-man
 	public static int[] getLabelFrequency(ArrayList<ID3DataTuple> tuples) {
 		int[] counter = new int[Settings.CLASS_LABELS.length];
 		for (int i = 0; i < tuples.size(); i++) {
 			for (int j = 0; j < Settings.CLASS_LABELS.length; j++) {
-				if(tuples.get(i).DirectionChosen.ordinal()==Settings.CLASS_LABELS[j]) {		//{"Yes", "No"}
+				if (tuples.get(i).DirectionChosen.name().equals(Settings.CLASS_LABELS[j])) { 
 					counter[j]++;
 					break;
 				}
@@ -62,34 +63,35 @@ public class HelperClass {
 		return counter;
 	}
 
-
 	public static String getMajorityClassInList(ArrayList<ID3DataTuple> tuples) {
 		int[] counter = getLabelFrequency(tuples);
-		//Change here for Pac-man!
-		if(counter[0]>=counter[1]) {								//{"Yes", "No"}
-			return "Yes";
+		int max = counter[0];
+		int index = 0;
+		for (int i = 0; i < counter.length; i++) {
+			if (max < counter[i]) {
+				max = counter[i];
+				index = i;
+			}
 		}
-		else {
-			return "No";
-		}
+		return Settings.CLASS_LABELS[index];
 	}
-	
-	//Fixed for pac-man
+
+	// Fixed for pac-man
 	public static double[] getLableRatios(ArrayList<ID3DataTuple> tuples) {
 		double[] labelRatios = new double[Settings.CLASS_LABELS.length];
 		int length = tuples.size();
 		int[] counter = getLabelFrequency(tuples);
 		for (int i = 0; i < Settings.CLASS_LABELS.length; i++) {
-			labelRatios[i] = (double) counter[i] / length;			//{"Yes", "No"}
+			labelRatios[i] = (double) counter[i] / length;
 		}
 		return labelRatios;
 	}
-	
-	//Fixed for pac-man
+
+	// Fixed for pac-man
 	public static double calculateEntropy(double[] ratios) {
 		double entropy = 0.0;
 		for (int i = 0; i < ratios.length; i++) {
-			entropy-=ratios[i]*MathHelper.log2(ratios[i]);			//{"Yes", "No"}
+			entropy -= ratios[i] * MathHelper.log2(ratios[i]);
 		}
 		return entropy;
 	}
@@ -157,9 +159,9 @@ public class HelperClass {
 		ArrayList<Attribute> attributes = new ArrayList<>();
 
 		ArrayList<String> attrValues = new ArrayList<>();
-		attrValues.add("false");										
-		attrValues.add("true");										
-		attributes.add(new Attribute(0, "isGhostClose", attrValues));
+		attrValues.add("false");
+		attrValues.add("true");
+		attributes.add(new Attribute(10, "isGhostClose", attrValues));
 
 		ArrayList<String> attrValues1 = new ArrayList<>();
 		attrValues1.add("UP");
@@ -167,12 +169,12 @@ public class HelperClass {
 		attrValues1.add("DOWN");
 		attrValues1.add("LEFT");
 		attrValues1.add("NEUTRAL");
-		attributes.add(new Attribute(1, "closestPillDir", attrValues1));
+		attributes.add(new Attribute(11, "closestPillDir", attrValues1));
 
 		return attributes;
 	}
-	
-	public static ArrayList<Attribute> getAttributeListCopy(ArrayList<Attribute> list){
+
+	public static ArrayList<Attribute> getAttributeListCopy(ArrayList<Attribute> list) {
 		ArrayList<Attribute> newList = new ArrayList<>();
 		for (int i = 0; i < list.size(); i++) {
 			int index = list.get(i).getIndex();

@@ -39,6 +39,19 @@ public class ID3PacMan extends Controller<MOVE>{
 	private Node generateTree(ArrayList<ID3DataTuple> tuples, ArrayList<Attribute> attributes) {
 		Node node = new Node();
 		String majorityClassStr = HelperClass.getMajorityClassInList(tuples);
+		System.out.println(majorityClassStr);
+		int[] labelFreq = HelperClass.getLabelFrequency(tuples);
+		for (int i = 0; i < labelFreq.length; i++) {
+			System.out.println(labelFreq[i]);
+		}
+		ArrayList<ArrayList<ID3DataTuple>> splitData = HelperClass.splitData(tuples, attributes.get(1));
+		for (int i = 0; i < splitData.size(); i++) {
+			System.out.println("----------------");
+			for (int j = 0; j < splitData.get(i).size(); j++) {
+				System.out.println(splitData.get(i).get(j));
+			}
+			
+		}
 		return node;
 	}
 	

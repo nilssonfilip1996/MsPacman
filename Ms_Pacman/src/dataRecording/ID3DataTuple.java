@@ -1,6 +1,7 @@
 package dataRecording;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import pacman.game.Constants;
 import pacman.game.Constants.DM;
@@ -27,6 +28,8 @@ public class ID3DataTuple {
 		}
 	}
 
+	private String[] attributeValues;
+	
 	public MOVE DirectionChosen;
 
 	// General game state this - not normalized!
@@ -51,6 +54,11 @@ public class ID3DataTuple {
 	// Util data - useful for normalization
 	private int maximumDistance = 150;
 
+	/**
+	 * Used for playing Pacman real-time.
+	 * @param game
+	 * @param move
+	 */
 	public ID3DataTuple(Game game, MOVE move) {
 		if (move == MOVE.NEUTRAL) {
 			move = game.getPacmanLastMoveMade();
@@ -85,10 +93,15 @@ public class ID3DataTuple {
 		this.directionToClosestPill = directionToClosesPill(game);
 
 	}
+	
+	/**
+	 * Used to building ID3 Tree
+	 * @param data
+	 */
 
 	public ID3DataTuple(String data) {
 		String[] dataSplit = data.split(";");
-
+		attributeValues = dataSplit;
 		this.DirectionChosen = MOVE.valueOf(dataSplit[0]);
 
 		this.pacmanPosition = Integer.parseInt(dataSplit[1]);
@@ -166,6 +179,11 @@ public class ID3DataTuple {
 
 		return stringbuilder.toString();
 	}
+	
+	public String getAttributeValueAt(int i) {
+		return attributeValues[i];
+	}
+
 
 	/**
 	 * Used to normalize distances. Done via min-max normalization. Supposes
@@ -234,6 +252,17 @@ public class ID3DataTuple {
 		double aux = this.normalizeCurrentScore(score);
 		return DiscreteTag.DiscretizeDouble(aux);
 	}
+
+	@Override
+	public String toString() {
+		return "ID3DataTuple [DirectionChosen=" + DirectionChosen + ", pacmanPosition=" + pacmanPosition
+				+ ", blinkyDist=" + blinkyDist + ", inkyDist=" + inkyDist + ", pinkyDist=" + pinkyDist + ", sueDist="
+				+ sueDist + ", blinkyDir=" + blinkyDir + ", inkyDir=" + inkyDir + ", pinkyDir=" + pinkyDir + ", sueDir="
+				+ sueDir + ", isGhostClose=" + isGhostClose + ", directionToClosestPill=" + directionToClosestPill
+				+ "]";
+	}
+
+	
 
 	
 	
