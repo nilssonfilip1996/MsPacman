@@ -29,7 +29,7 @@ public class Main {
 		System.out.println(node.getChildrenNodes());
 		
 		
-		System.out.println(HelperClass.informationGain(tuples, attributes.get(3)));
+		System.out.println(HelperClass.informationGain(tuples, attributes.get(0)));
 		
 		node.PrintPretty("", true);
 		

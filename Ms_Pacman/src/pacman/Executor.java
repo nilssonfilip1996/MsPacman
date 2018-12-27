@@ -11,6 +11,7 @@ import java.util.EnumMap;
 import java.util.Random;
 
 import dataRecording.DataCollectorController;
+import id3.id3Pojo.Node;
 import pacman.controllers.Controller;
 import pacman.controllers.HumanController;
 import pacman.controllers.KeyBoardInput;
@@ -51,10 +52,11 @@ public class Executor
 		int numTrials=10;			// trials for testing
 		
 		// ********* OUR MS PACMAN **********
-		exec.runGameTimed(new ID3PacMan(),new StarterGhosts(),visual);
+		
+		//exec.runGameTimed(new ID3PacMan(new Node()),new StarterGhosts(),visual);
 		
 		// ********* DATA COLLECTION ********
-		// exec.runGameTimed(new DataCollectorController(new KeyBoardInput()),new StarterGhosts(),visual);
+		 exec.runGameTimed(new DataCollectorController(new KeyBoardInput()),new StarterGhosts(),visual);
 		
 		// ********* TRIAL IN BATCH MODE ****	
 		//exec.runExperiment(new ID3PacMan(),new StarterGhosts(),numTrials);

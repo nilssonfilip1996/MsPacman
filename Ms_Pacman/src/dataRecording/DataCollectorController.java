@@ -22,7 +22,9 @@ public class DataCollectorController extends HumanController{
 	public MOVE getMove(Game game, long dueTime) {
 		MOVE move = super.getMove(game, dueTime);
 		
-		DataTuple data = new DataTuple(game, move);
+		//DataTuple data = new DataTuple(game, move);
+		
+		ID3DataTuple data = new ID3DataTuple(game, move);
 				
 		DataSaverLoader.SavePacManData(data);		
 		return move;

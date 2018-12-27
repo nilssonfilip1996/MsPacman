@@ -12,7 +12,12 @@ public class DataSaverLoader {
 	
 	private static String FileName = "trainingData.txt";
 	
-	public static void SavePacManData(DataTuple data)
+//	public static void SavePacManData(DataTuple data)
+//	{
+//		IO.saveFile(FileName, data.getSaveString(), true);
+//	}
+	
+	public static void SavePacManData(ID3DataTuple data)
 	{
 		IO.saveFile(FileName, data.getSaveString(), true);
 	}
