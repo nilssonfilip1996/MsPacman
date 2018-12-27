@@ -20,8 +20,8 @@ public class ID3PacMan extends Controller<MOVE>{
 			if(game.getGhostEdibleTime(ghost)==0 && game.getGhostLairTime(ghost)==0)
 				if(game.getShortestPathDistance(current,game.getGhostCurrentNodeIndex(ghost))<DISTANCE_CLOSE)
 					ghostClose = true;
-		if(ghostClose)
-			System.out.print(" Ghost close! ");
+				else
+					ghostClose = false;
 		
 		return pacManMove;
 	}
