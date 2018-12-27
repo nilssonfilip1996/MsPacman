@@ -45,7 +45,7 @@ public class ID3DataTuple {
 	public MOVE sueDir;
 	
 	public boolean isGhostClose;
-	public int directionToClosestPill;
+	public MOVE directionToClosestPill;
 	public int DISTANCE_CLOSE = 20;
 
 	// Util data - useful for normalization
@@ -102,7 +102,7 @@ public class ID3DataTuple {
 		this.sueDir = MOVE.valueOf(dataSplit[9]);
 		
 		this.isGhostClose = Boolean.parseBoolean(dataSplit[10]);
-		this.directionToClosestPill = Integer.parseInt(dataSplit[11]);
+		this.directionToClosestPill = MOVE.valueOf(dataSplit[11]);
 		//Add custom attributes
 	}
 	
@@ -121,7 +121,7 @@ public class ID3DataTuple {
 	}
 	
 	// have to cast MOVES
-	public int directionToClosesPill(Game game) {
+	public MOVE directionToClosesPill(Game game) {
 		int current=game.getPacmanCurrentNodeIndex();
 		
 		int[] pills=game.getPillIndices();
@@ -143,7 +143,7 @@ public class ID3DataTuple {
 			targetsArray[i]=targets.get(i);
 		
 		//return the next direction once the closest target has been identified
-		return game.getNextMoveTowardsTarget(current,game.getClosestNodeIndexFromNodeIndex(current,targetsArray,DM.PATH),DM.PATH).ordinal();
+		return game.getNextMoveTowardsTarget(current,game.getClosestNodeIndexFromNodeIndex(current,targetsArray,DM.PATH),DM.PATH);
 		//return 0;
 
 	}

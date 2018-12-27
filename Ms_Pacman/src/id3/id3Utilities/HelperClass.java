@@ -36,12 +36,12 @@ public class HelperClass {
 		return null;
 	}
 
-	public static boolean doTuplesHaveSameClass(ArrayList<DataTuple> tuples) {
+	public static boolean doTuplesHaveSameClass(ArrayList<ID3DataTuple> tuples) {
 		if (tuples.size() < 2) {
 			return true;
 		}
 		for (int i = 0; i < tuples.size() - 1; i++) {
-			if (!(tuples.get(i).getClassName().equals(tuples.get(i + 1).getClassName()))) {
+			if (!(tuples.get(i).DirectionChosen.ordinal()==tuples.get(i + 1).DirectionChosen.ordinal())) {
 				return false;
 			}
 		}
@@ -49,11 +49,11 @@ public class HelperClass {
 	}
 	
 	//Fixed for Pac-man
-	public static int[] getLabelFrequency(ArrayList<DataTuple> tuples) {
+	public static int[] getLabelFrequency(ArrayList<ID3DataTuple> tuples) {
 		int[] counter = new int[Settings.CLASS_LABELS.length];
 		for (int i = 0; i < tuples.size(); i++) {
 			for (int j = 0; j < Settings.CLASS_LABELS.length; j++) {
-				if(tuples.get(i).getClassName().equals(Settings.CLASS_LABELS[j])) {		//{"Yes", "No"}
+				if(tuples.get(i).DirectionChosen.ordinal()==Settings.CLASS_LABELS[j]) {		//{"Yes", "No"}
 					counter[j]++;
 					break;
 				}
@@ -62,8 +62,8 @@ public class HelperClass {
 		return counter;
 	}
 
-	//Fixed for pac-man
-	public static String getMajorityClassInList(ArrayList<DataTuple> tuples) {
+
+	public static String getMajorityClassInList(ArrayList<ID3DataTuple> tuples) {
 		int[] counter = getLabelFrequency(tuples);
 		//Change here for Pac-man!
 		if(counter[0]>=counter[1]) {								//{"Yes", "No"}
@@ -75,7 +75,7 @@ public class HelperClass {
 	}
 	
 	//Fixed for pac-man
-	public static double[] getLableRatios(ArrayList<DataTuple> tuples) {
+	public static double[] getLableRatios(ArrayList<ID3DataTuple> tuples) {
 		double[] labelRatios = new double[Settings.CLASS_LABELS.length];
 		int length = tuples.size();
 		int[] counter = getLabelFrequency(tuples);
@@ -101,11 +101,11 @@ public class HelperClass {
 	 * @param attr   , attribute to compute gain on.
 	 * @return
 	 */
-	public static double informationGain(ArrayList<DataTuple> tuples, Attribute attr) {
+	public static double informationGain(ArrayList<ID3DataTuple> tuples, Attribute attr) {
 		double gain = 0;
 
 		gain = calculateEntropy(getLableRatios(tuples));
-		ArrayList<ArrayList<DataTuple>> splitData = splitData(tuples, attr);
+		ArrayList<ArrayList<ID3DataTuple>> splitData = splitData(tuples, attr);
 
 		for (int i = 0; i < attr.getNumberOfValues(); i++) {
 			double subSetSize = splitData.get(i).size();
@@ -116,15 +116,15 @@ public class HelperClass {
 		return gain;
 	}
 
-	public static ArrayList<ArrayList<DataTuple>> splitData(ArrayList<DataTuple> tuples, Attribute attr) {
-		ArrayList<ArrayList<DataTuple>> splitData = new ArrayList<ArrayList<DataTuple>>(attr.getNumberOfValues());
+	public static ArrayList<ArrayList<ID3DataTuple>> splitData(ArrayList<ID3DataTuple> tuples, Attribute attr) {
+		ArrayList<ArrayList<ID3DataTuple>> splitData = new ArrayList<ArrayList<ID3DataTuple>>(attr.getNumberOfValues());
 		for (int i = 0; i < attr.getNumberOfValues(); i++) {
-			splitData.add(new ArrayList<DataTuple>());
+			splitData.add(new ArrayList<ID3DataTuple>());
 		}
 		ArrayList<String> attrValues = attr.getAttributeValues();
 		for (int i = 0; i < attrValues.size(); i++) { // For all attribute values.
 			for (int j = 0; j < tuples.size(); j++) { // For all tuples
-				DataTuple tempTuple = tuples.get(j);
+				ID3DataTuple tempTuple = tuples.get(j);
 				if (attrValues.get(i).equals(tempTuple.getAttributeValueAt(attr.getIndex()))) { // if a certain attr
 																								// value equals the one
 																								// found in the tuple.
@@ -135,7 +135,7 @@ public class HelperClass {
 		return splitData;
 	}
 
-	public static Attribute attributeSelection(ArrayList<DataTuple> tuples, ArrayList<Attribute> attributes) {
+	public static Attribute attributeSelection(ArrayList<ID3DataTuple> tuples, ArrayList<Attribute> attributes) {
 		double best = 0;
 		double current = 0;
 		Attribute attribute = null;
@@ -157,8 +157,8 @@ public class HelperClass {
 		ArrayList<Attribute> attributes = new ArrayList<>();
 
 		ArrayList<String> attrValues = new ArrayList<>();
-		attrValues.add("0");											//False
-		attrValues.add("1");											//True
+		attrValues.add("false");										
+		attrValues.add("true");										
 		attributes.add(new Attribute(0, "isGhostClose", attrValues));
 
 		ArrayList<String> attrValues1 = new ArrayList<>();

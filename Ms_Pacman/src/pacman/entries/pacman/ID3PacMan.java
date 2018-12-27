@@ -20,16 +20,44 @@ public class ID3PacMan extends Controller<MOVE>{
 		super();
 		//Initialize tuples- and attributeList.
 		ArrayList<ID3DataTuple> tuples = HelperClass.getALFromFile("myData/trainingData.txt");
-		for (int i = 0; i < tuples.size(); i++) {
-			System.out.println(tuples.get(i).DirectionChosen + " is: " + tuples.get(i).DirectionChosen.ordinal());
-		}
-		rootNode = generateTree(tuples, null);
+		ArrayList<Attribute> attributes = HelperClass.generateAttributes();
+		rootNode = generateTree(tuples, attributes);
+		//rootNode.PrintPretty("", true);
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	private Node generateTree(ArrayList<ID3DataTuple> tuples, ArrayList<Attribute> attributes) {
 		Node node = new Node();
+		String majorityClassStr = HelperClass.getMajorityClassInList(tuples);
 		return node;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	public MOVE getMove(Game game, long timeDue) {
