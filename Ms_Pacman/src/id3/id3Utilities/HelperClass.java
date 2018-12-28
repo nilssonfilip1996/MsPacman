@@ -170,6 +170,8 @@ public class HelperClass {
 		attrValues1.add("LEFT");
 		attrValues1.add("NEUTRAL");
 		attributes.add(new Attribute(11, "closestPillDir", attrValues1));
+		
+		// lägg till logik här
 
 		return attributes;
 	}
