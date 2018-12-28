@@ -49,7 +49,10 @@ public class ID3DataTuple {
 	public boolean isGhostClose;
 	public MOVE directionToClosestPill;
 	public int DISTANCE_CLOSE = 40;
-
+	public String distance = "far";
+	public int CLOSE = 20;
+	public int MID = 60;
+	public int FAR = 100;
 	// Util data - useful for normalization
 	private int maximumDistance = 150;
 
@@ -90,8 +93,9 @@ public class ID3DataTuple {
 		
 		this.isGhostClose = isGhostClose(game);
 		this.directionToClosestPill = directionToClosesPill(game);
+		this.distance = distanceToClosestGhost(game);
 		
-		attributeValues = new String[12];
+		attributeValues = new String[13];
 		attributeValues[0] = DirectionChosen.name();
 		attributeValues[1] = String.valueOf(pacmanPosition);
 		attributeValues[2] = String.valueOf(blinkyDist);
@@ -104,7 +108,8 @@ public class ID3DataTuple {
 		attributeValues[9] = sueDir.name();
 		attributeValues[10] = String.valueOf(isGhostClose);
 		attributeValues[11] = directionToClosestPill.name();
-
+		// add attribute as string
+		attributeValues[12] = distance;
 	}
 	
 	/**
@@ -126,10 +131,13 @@ public class ID3DataTuple {
 		this.inkyDir = MOVE.valueOf(dataSplit[7]);
 		this.pinkyDir = MOVE.valueOf(dataSplit[8]);
 		this.sueDir = MOVE.valueOf(dataSplit[9]);
-		
+		//custom attributes		
 		this.isGhostClose = Boolean.parseBoolean(dataSplit[10]);
 		this.directionToClosestPill = MOVE.valueOf(dataSplit[11]);
-		//Add custom attributes
+		// distance to ghosts
+		this.distance = dataSplit[12];
+		
+
 	}
 	
 	public boolean isGhostClose(Game game) {
@@ -144,6 +152,23 @@ public class ID3DataTuple {
 					isGhostClose = false;
 				}
 		return isGhostClose;
+	}
+	
+	public String distanceToClosestGhost(Game game) {
+		int current=game.getPacmanCurrentNodeIndex();
+		
+		for(GHOST ghost : GHOST.values())
+			if(game.getGhostEdibleTime(ghost)==0 && game.getGhostLairTime(ghost)==0)
+				if(game.getShortestPathDistance(current,game.getGhostCurrentNodeIndex(ghost))<CLOSE) {
+					distance = "close";
+				}
+				else if (game.getShortestPathDistance(current,game.getGhostCurrentNodeIndex(ghost))<MID) {
+					distance = "mid";
+				}
+				else {
+					distance = "far";
+				}
+		return distance;
 	}
 	
 	// have to cast MOVES
@@ -189,6 +214,7 @@ public class ID3DataTuple {
 		stringbuilder.append(this.sueDir + ";");
 		stringbuilder.append(this.isGhostClose + ";");
 		stringbuilder.append(this.directionToClosestPill + ";");
+		stringbuilder.append(this.distance + ";");
 
 		return stringbuilder.toString();
 	}
@@ -272,7 +298,7 @@ public class ID3DataTuple {
 				+ ", blinkyDist=" + blinkyDist + ", inkyDist=" + inkyDist + ", pinkyDist=" + pinkyDist + ", sueDist="
 				+ sueDist + ", blinkyDir=" + blinkyDir + ", inkyDir=" + inkyDir + ", pinkyDir=" + pinkyDir + ", sueDir="
 				+ sueDir + ", isGhostClose=" + isGhostClose + ", directionToClosestPill=" + directionToClosestPill
-				+ "]";
+				+ "distanceToClosestGhost=" + distance + "]";
 	}
 
 	
