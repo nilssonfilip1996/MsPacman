@@ -140,7 +140,7 @@ public class HelperClass {
 	public static Attribute attributeSelection(ArrayList<ID3DataTuple> tuples, ArrayList<Attribute> attributes) {
 		double best = 0;
 		double current = 0;
-		Attribute attribute = null;
+		Attribute attribute = attributes.get(0);
 		for (int i = 0; i < attributes.size(); i++) {
 			current = informationGain(tuples, attributes.get(i));
 			if (current > best) {
@@ -169,9 +169,30 @@ public class HelperClass {
 		attrValues1.add("DOWN");
 		attrValues1.add("LEFT");
 		attrValues1.add("NEUTRAL");
-		attributes.add(new Attribute(11, "closestPillDir", attrValues1));
+		attributes.add(new Attribute(12, "closestPillDir", attrValues1));
 		
-		// lägg till logik här
+		ArrayList<String> attrValues2 = new ArrayList<>();
+		attrValues2.add("UP");
+		attrValues2.add("RIGHT");
+		attrValues2.add("DOWN");
+		attrValues2.add("LEFT");
+		attrValues2.add("NEUTRAL");
+		attributes.add(new Attribute(13, "dirAwayFromClosestGhost", attrValues2));
+		
+		ArrayList<String> attrValues3 = new ArrayList<>();
+		attrValues3.add("false");
+		attrValues3.add("true");
+		attributes.add(new Attribute(14, "isPPClose", attrValues3));
+		
+		ArrayList<String> attrValues4 = new ArrayList<>();
+		attrValues4.add("UP");
+		attrValues4.add("RIGHT");
+		attrValues4.add("DOWN");
+		attrValues4.add("LEFT");
+		attrValues4.add("NEUTRAL");
+		attributes.add(new Attribute(15, "closestPPDir", attrValues4));
+
+
 
 		return attributes;
 	}

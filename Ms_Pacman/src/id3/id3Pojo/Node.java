@@ -76,8 +76,9 @@ public class Node {
 			System.out.println(classLabel);
 	       }
 
-	       for (int i = 0; i < childrenNodes.size(); i++)
+	       for (int i = 0; i < childrenNodes.size(); i++) {
 	           childrenNodes.get(i).PrintPretty(indent, i == childrenNodes.size()-1);
+	       }
 	   }
 
 	

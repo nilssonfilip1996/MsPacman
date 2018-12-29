@@ -20,8 +20,25 @@ public class ID3PacMan extends Controller<MOVE>{
 		//Initialize tuples- and attributeList.
 		ArrayList<ID3DataTuple> tuples = HelperClass.getALFromFile("myData/trainingData.txt");
 		ArrayList<Attribute> attributes = HelperClass.generateAttributes();
+		ArrayList<Attribute> attributesTemp = HelperClass.getAttributeListCopy(attributes);
 		rootNode = generateTree(tuples, attributes);
 		rootNode.PrintPretty("", true);
+		
+		ArrayList<ID3DataTuple> tuplesTest = HelperClass.getALFromFile("myData/testData.txt");
+		int totalSize = tuplesTest.size();
+		int correctCounter = 0;
+		for (int i = 0; i < tuplesTest.size(); i++) {
+			String pred = predictClassLabel(rootNode, tuplesTest.get(i));
+			System.out.println("predicted: " + pred + ", Correct: " + tuplesTest.get(i).DirectionChosen.name());
+			if(pred.equals(tuplesTest.get(i).DirectionChosen.name())) {
+				correctCounter++;
+			}
+		}
+		System.out.println("Correct/total " + correctCounter + "/" + totalSize);
+//		for (int i = 0; i < attributesTemp.size(); i++) {
+//			System.out.println("Attribute: " + attributesTemp.get(i).getName() + ", calculated: " + HelperClass.informationGain(tuples, attributesTemp.get(i)));
+//		}
+		
 	}
 	
 
@@ -43,7 +60,7 @@ public class ID3PacMan extends Controller<MOVE>{
 			return node;
 		}
 		Attribute attr = HelperClass.attributeSelection(tuples, attributes);
-		HelperClass.removeAttribute(attributes, attr);
+		//HelperClass.removeAttribute(attributes, attr);
 		node.setAttribute(attr);
 		ArrayList<ArrayList<ID3DataTuple>> splitData = HelperClass.splitData(tuples, attr);
 		for (int i = 0; i < splitData.size(); i++) {
@@ -52,7 +69,9 @@ public class ID3PacMan extends Controller<MOVE>{
 				childNode.setClassLabel(majorityClassStr);
 			}
 			else {
+				attributes.remove(attr);
 				childNode = generateTree(splitData.get(i), attributes);
+				attributes.add(attr);
 			}
 			childNode.setBranchName(attr.getAttributeValues().get(i));
 			node.addChildNode(childNode);

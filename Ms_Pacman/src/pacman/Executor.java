@@ -57,11 +57,13 @@ public class Executor
 		exec.runGameTimed(new ID3PacMan(),new StarterGhosts(),visual);
 		
 		// ********* DATA COLLECTION ********
-		//exec.runGameTimed(new DataCollectorController(new KeyBoardInput()),new StarterGhosts(),visual);
+		//String fileName = "testData.txt";
+		//String fileName = "trainingData.txt";
+		//exec.runGameTimed(new DataCollectorController(new KeyBoardInput(), fileName),new StarterGhosts(),visual);
 		
 		// ********* TRIAL IN BATCH MODE ****	
 		//exec.runExperiment(new ID3PacMan(),new StarterGhosts(),numTrials);
-		 
+		//exec.runExperiment(new StarterPacMan(),new StarterGhosts(),numTrials);
 		
 		/*
 		//run a game in synchronous mode: game waits until controllers respond.

@@ -47,12 +47,15 @@ public class ID3DataTuple {
 	public MOVE sueDir;
 	
 	public boolean isGhostClose;
+	public int closestGhostDistance;
 	public MOVE directionToClosestPill;
-	public int DISTANCE_CLOSE = 40;
-	public String distance = "far";
+	public int DISTANCE_CLOSE = 15;
 	public int CLOSE = 20;
 	public int MID = 60;
 	public int FAR = 100;
+	public MOVE dirAwayFromClosestGhost;
+	public boolean isPPClose = false;
+	public MOVE directionToClosestPP;
 	// Util data - useful for normalization
 	private int maximumDistance = 150;
 
@@ -91,11 +94,14 @@ public class ID3DataTuple {
 		this.pinkyDir = game.getNextMoveTowardsTarget(game.getPacmanCurrentNodeIndex(), game.getGhostCurrentNodeIndex(GHOST.PINKY), DM.PATH);
 		this.sueDir = game.getNextMoveTowardsTarget(game.getPacmanCurrentNodeIndex(), game.getGhostCurrentNodeIndex(GHOST.SUE), DM.PATH);
 		
-		this.isGhostClose = isGhostClose(game);
-		this.directionToClosestPill = directionToClosesPill(game);
-		this.distance = distanceToClosestGhost(game);
+		this.isGhostClose = game.isGhostClose(DISTANCE_CLOSE);
+		this.closestGhostDistance = game.distanceToClosestGhost();
+		this.directionToClosestPill = game.directionToClosesPill();
+		this.dirAwayFromClosestGhost = game.getMoveAwayFromThreat();
+		this.isPPClose = game.isPowerPillClose(closestGhostDistance); 		//Verify
+		this.directionToClosestPP = game.directionToClosestPP();
 		
-		attributeValues = new String[13];
+		attributeValues = new String[16];
 		attributeValues[0] = DirectionChosen.name();
 		attributeValues[1] = String.valueOf(pacmanPosition);
 		attributeValues[2] = String.valueOf(blinkyDist);
@@ -107,11 +113,14 @@ public class ID3DataTuple {
 		attributeValues[8] = pinkyDir.name();
 		attributeValues[9] = sueDir.name();
 		attributeValues[10] = String.valueOf(isGhostClose);
-		attributeValues[11] = directionToClosestPill.name();
+		attributeValues[11] = String.valueOf(closestGhostDistance);
+		attributeValues[12] = directionToClosestPill.name();
 		// add attribute as string
-		attributeValues[12] = distance;
+		attributeValues[13] = dirAwayFromClosestGhost.name();
+		attributeValues[14] = String.valueOf(isPPClose);
+		attributeValues[15] = directionToClosestPP.name();
 	}
-	
+
 	/**
 	 * Used to building ID3 Tree
 	 * @param data
@@ -133,70 +142,11 @@ public class ID3DataTuple {
 		this.sueDir = MOVE.valueOf(dataSplit[9]);
 		//custom attributes		
 		this.isGhostClose = Boolean.parseBoolean(dataSplit[10]);
-		this.directionToClosestPill = MOVE.valueOf(dataSplit[11]);
-		// distance to ghosts
-		this.distance = dataSplit[12];
-		
-
-	}
-	
-	public boolean isGhostClose(Game game) {
-		int current=game.getPacmanCurrentNodeIndex();
-		
-		for(GHOST ghost : GHOST.values())
-			if(game.getGhostEdibleTime(ghost)==0 && game.getGhostLairTime(ghost)==0)
-				if(game.getShortestPathDistance(current,game.getGhostCurrentNodeIndex(ghost))<DISTANCE_CLOSE) {
-					isGhostClose = true;
-				}
-				else {
-					isGhostClose = false;
-				}
-		return isGhostClose;
-	}
-	
-	public String distanceToClosestGhost(Game game) {
-		int current=game.getPacmanCurrentNodeIndex();
-		
-		for(GHOST ghost : GHOST.values())
-			if(game.getGhostEdibleTime(ghost)==0 && game.getGhostLairTime(ghost)==0)
-				if(game.getShortestPathDistance(current,game.getGhostCurrentNodeIndex(ghost))<CLOSE) {
-					distance = "close";
-				}
-				else if (game.getShortestPathDistance(current,game.getGhostCurrentNodeIndex(ghost))<MID) {
-					distance = "mid";
-				}
-				else {
-					distance = "far";
-				}
-		return distance;
-	}
-	
-	// have to cast MOVES
-	public MOVE directionToClosesPill(Game game) {
-		int current=game.getPacmanCurrentNodeIndex();
-		
-		int[] pills=game.getPillIndices();
-		int[] powerPills=game.getPowerPillIndices();		
-		
-		ArrayList<Integer> targets=new ArrayList<Integer>();
-		
-		for(int i=0;i<pills.length;i++)					//check which pills are available			
-			if(game.isPillStillAvailable(i))
-				targets.add(pills[i]);
-		
-		for(int i=0;i<powerPills.length;i++)				//check with power pills are available
-			if(game.isPowerPillStillAvailable(i))
-				targets.add(powerPills[i]);				
-		
-		int[] targetsArray=new int[targets.size()];		//convert from ArrayList to array
-		
-		for(int i=0;i<targetsArray.length;i++)
-			targetsArray[i]=targets.get(i);
-		
-		//return the next direction once the closest target has been identified
-		return game.getNextMoveTowardsTarget(current,game.getClosestNodeIndexFromNodeIndex(current,targetsArray,DM.PATH),DM.PATH);
-		//return 0;
-
+		this.closestGhostDistance = Integer.parseInt(dataSplit[11]);
+		this.directionToClosestPill = MOVE.valueOf(dataSplit[12]);
+		this.dirAwayFromClosestGhost = MOVE.valueOf(dataSplit[13]);
+		this.isPPClose = Boolean.parseBoolean(dataSplit[14]);
+		this.directionToClosestPP = MOVE.valueOf(dataSplit[15]);
 	}
 
 	public String getSaveString() {
@@ -213,8 +163,11 @@ public class ID3DataTuple {
 		stringbuilder.append(this.pinkyDir + ";");
 		stringbuilder.append(this.sueDir + ";");
 		stringbuilder.append(this.isGhostClose + ";");
+		stringbuilder.append(this.closestGhostDistance + ";"); 		//Not an actual attribute
 		stringbuilder.append(this.directionToClosestPill + ";");
-		stringbuilder.append(this.distance + ";");
+		stringbuilder.append(this.dirAwayFromClosestGhost + ";");
+		stringbuilder.append(this.isPPClose + ";");
+		stringbuilder.append(this.directionToClosestPP + ";");
 
 		return stringbuilder.toString();
 	}
@@ -298,7 +251,7 @@ public class ID3DataTuple {
 				+ ", blinkyDist=" + blinkyDist + ", inkyDist=" + inkyDist + ", pinkyDist=" + pinkyDist + ", sueDist="
 				+ sueDist + ", blinkyDir=" + blinkyDir + ", inkyDir=" + inkyDir + ", pinkyDir=" + pinkyDir + ", sueDir="
 				+ sueDir + ", isGhostClose=" + isGhostClose + ", directionToClosestPill=" + directionToClosestPill
-				+ "distanceToClosestGhost=" + distance + "]";
+				+ "distanceToClosestGhost=" + closestGhostDistance + "]";
 	}
 
 	
