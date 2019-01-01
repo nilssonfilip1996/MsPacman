@@ -58,7 +58,7 @@ public class Executor
 		
 		// ********* DATA COLLECTION ********
 		//String fileName = "testData.txt";
-		//String fileName = "trainingData.txt";
+		String fileName = "trainingData.txt";
 		//exec.runGameTimed(new DataCollectorController(new KeyBoardInput(), fileName),new StarterGhosts(),visual);
 		
 		// ********* TRIAL IN BATCH MODE ****	

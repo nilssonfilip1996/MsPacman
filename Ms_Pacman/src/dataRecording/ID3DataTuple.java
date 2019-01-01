@@ -49,13 +49,14 @@ public class ID3DataTuple {
 	public boolean isGhostClose;
 	public int closestGhostDistance;
 	public MOVE directionToClosestPill;
-	public int DISTANCE_CLOSE = 15;
+	public int DISTANCE_CLOSE = 5;
 	public int CLOSE = 20;
 	public int MID = 60;
 	public int FAR = 100;
 	public MOVE dirAwayFromClosestGhost;
 	public boolean isPPClose = false;
 	public MOVE directionToClosestPP;
+	public GHOST closestGhost;
 	// Util data - useful for normalization
 	private int maximumDistance = 150;
 
@@ -97,11 +98,12 @@ public class ID3DataTuple {
 		this.isGhostClose = game.isGhostClose(DISTANCE_CLOSE);
 		this.closestGhostDistance = game.distanceToClosestGhost();
 		this.directionToClosestPill = game.directionToClosesPill();
-		this.dirAwayFromClosestGhost = game.getMoveAwayFromThreat();
-		this.isPPClose = game.isPowerPillClose(closestGhostDistance); 		//Verify
+		this.closestGhost = game.closestGhost();
+		this.dirAwayFromClosestGhost = game.getMoveAwayFromThreat(closestGhost);
+		this.isPPClose = game.isPowerPillClose(DISTANCE_CLOSE); 		//Verify
 		this.directionToClosestPP = game.directionToClosestPP();
 		
-		attributeValues = new String[16];
+		attributeValues = new String[17];
 		attributeValues[0] = DirectionChosen.name();
 		attributeValues[1] = String.valueOf(pacmanPosition);
 		attributeValues[2] = String.valueOf(blinkyDist);
@@ -116,9 +118,10 @@ public class ID3DataTuple {
 		attributeValues[11] = String.valueOf(closestGhostDistance);
 		attributeValues[12] = directionToClosestPill.name();
 		// add attribute as string
-		attributeValues[13] = dirAwayFromClosestGhost.name();
-		attributeValues[14] = String.valueOf(isPPClose);
-		attributeValues[15] = directionToClosestPP.name();
+		attributeValues[13] = closestGhost.name();
+		attributeValues[14] = dirAwayFromClosestGhost.name();
+		attributeValues[15] = String.valueOf(isPPClose);
+		attributeValues[16] = directionToClosestPP.name();
 	}
 
 	/**
@@ -144,9 +147,10 @@ public class ID3DataTuple {
 		this.isGhostClose = Boolean.parseBoolean(dataSplit[10]);
 		this.closestGhostDistance = Integer.parseInt(dataSplit[11]);
 		this.directionToClosestPill = MOVE.valueOf(dataSplit[12]);
-		this.dirAwayFromClosestGhost = MOVE.valueOf(dataSplit[13]);
-		this.isPPClose = Boolean.parseBoolean(dataSplit[14]);
-		this.directionToClosestPP = MOVE.valueOf(dataSplit[15]);
+		this.closestGhost = GHOST.valueOf(dataSplit[13]);
+		this.dirAwayFromClosestGhost = MOVE.valueOf(dataSplit[14]);
+		this.isPPClose = Boolean.parseBoolean(dataSplit[15]);
+		this.directionToClosestPP = MOVE.valueOf(dataSplit[16]);
 	}
 
 	public String getSaveString() {
@@ -165,6 +169,7 @@ public class ID3DataTuple {
 		stringbuilder.append(this.isGhostClose + ";");
 		stringbuilder.append(this.closestGhostDistance + ";"); 		//Not an actual attribute
 		stringbuilder.append(this.directionToClosestPill + ";");
+		stringbuilder.append(this.closestGhost + ";");
 		stringbuilder.append(this.dirAwayFromClosestGhost + ";");
 		stringbuilder.append(this.isPPClose + ";");
 		stringbuilder.append(this.directionToClosestPP + ";");

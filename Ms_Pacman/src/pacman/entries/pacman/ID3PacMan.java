@@ -29,12 +29,12 @@ public class ID3PacMan extends Controller<MOVE>{
 		int correctCounter = 0;
 		for (int i = 0; i < tuplesTest.size(); i++) {
 			String pred = predictClassLabel(rootNode, tuplesTest.get(i));
-			System.out.println("predicted: " + pred + ", Correct: " + tuplesTest.get(i).DirectionChosen.name());
+			//System.out.println("predicted: " + pred + ", Correct: " + tuplesTest.get(i).DirectionChosen.name());
 			if(pred.equals(tuplesTest.get(i).DirectionChosen.name())) {
 				correctCounter++;
 			}
 		}
-		System.out.println("Correct/total " + correctCounter + "/" + totalSize);
+		System.out.println("Correct/total " + correctCounter + "/" + totalSize + " gives the accuracy: " + (double)correctCounter/totalSize);
 //		for (int i = 0; i < attributesTemp.size(); i++) {
 //			System.out.println("Attribute: " + attributesTemp.get(i).getName() + ", calculated: " + HelperClass.informationGain(tuples, attributesTemp.get(i)));
 //		}

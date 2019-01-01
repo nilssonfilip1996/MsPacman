@@ -1,0 +1,6 @@
+10 isGhostClose true false
+12 closestPillDir UP DOWN LEFT RIGHT
+13 closestGhost BLINKY INKY PINKY SUE
+14 dirAwayFromClosestGhost UP DOWN LEFT RIGHT
+15 isPPClose true false
+16 closestPPDir UP DOWN LEFT RIGHT

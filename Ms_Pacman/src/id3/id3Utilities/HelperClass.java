@@ -48,7 +48,6 @@ public class HelperClass {
 		return true;
 	}
 
-	// Fixed for Pac-man
 	public static int[] getLabelFrequency(ArrayList<ID3DataTuple> tuples) {
 		int[] counter = new int[Settings.CLASS_LABELS.length];
 		for (int i = 0; i < tuples.size(); i++) {
@@ -75,7 +74,6 @@ public class HelperClass {
 		return Settings.CLASS_LABELS[index];
 	}
 
-	// Fixed for pac-man
 	public static double[] getLableRatios(ArrayList<ID3DataTuple> tuples) {
 		double[] labelRatios = new double[Settings.CLASS_LABELS.length];
 		int length = tuples.size();
@@ -86,7 +84,6 @@ public class HelperClass {
 		return labelRatios;
 	}
 
-	// Fixed for pac-man
 	public static double calculateEntropy(double[] ratios) {
 		double entropy = 0.0;
 		for (int i = 0; i < ratios.length; i++) {
@@ -158,43 +155,29 @@ public class HelperClass {
 	public static ArrayList<Attribute> generateAttributes() {
 		ArrayList<Attribute> attributes = new ArrayList<>();
 
-		ArrayList<String> attrValues = new ArrayList<>();
-		attrValues.add("false");
-		attrValues.add("true");
-		attributes.add(new Attribute(10, "isGhostClose", attrValues));
-
-		ArrayList<String> attrValues1 = new ArrayList<>();
-		attrValues1.add("UP");
-		attrValues1.add("RIGHT");
-		attrValues1.add("DOWN");
-		attrValues1.add("LEFT");
-		attrValues1.add("NEUTRAL");
-		attributes.add(new Attribute(12, "closestPillDir", attrValues1));
-		
-		ArrayList<String> attrValues2 = new ArrayList<>();
-		attrValues2.add("UP");
-		attrValues2.add("RIGHT");
-		attrValues2.add("DOWN");
-		attrValues2.add("LEFT");
-		attrValues2.add("NEUTRAL");
-		attributes.add(new Attribute(13, "dirAwayFromClosestGhost", attrValues2));
-		
-		ArrayList<String> attrValues3 = new ArrayList<>();
-		attrValues3.add("false");
-		attrValues3.add("true");
-		attributes.add(new Attribute(14, "isPPClose", attrValues3));
-		
-		ArrayList<String> attrValues4 = new ArrayList<>();
-		attrValues4.add("UP");
-		attrValues4.add("RIGHT");
-		attrValues4.add("DOWN");
-		attrValues4.add("LEFT");
-		attrValues4.add("NEUTRAL");
-		attributes.add(new Attribute(15, "closestPPDir", attrValues4));
-
-
-
-		return attributes;
+		FileInputStream fstream;
+		try {
+			fstream = new FileInputStream("myData/attributes.txt");
+			DataInputStream in = new DataInputStream(fstream);
+			BufferedReader br = new BufferedReader(new InputStreamReader(in));
+			String strLine;
+			while ((strLine = br.readLine()) != null) {
+				String[] dataSplit = strLine.split(" ");
+				int index = Integer.parseInt(dataSplit[0]);
+				String name = dataSplit[1];
+				ArrayList<String> attrValues = new ArrayList<>();
+				for (int i = 2; i < dataSplit.length; i++) {
+					attrValues.add(dataSplit[i]);
+				}
+				attributes.add(new Attribute(index, name, attrValues));
+			}
+			in.close();
+			return attributes;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	public static ArrayList<Attribute> getAttributeListCopy(ArrayList<Attribute> list) {
