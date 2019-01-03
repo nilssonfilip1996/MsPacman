@@ -1,11 +1,17 @@
 package id3.id3Utilities;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataInputStream;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import dataRecording.ID3DataTuple;
@@ -192,5 +198,59 @@ public class HelperClass {
 			newList.add(new Attribute(index, name, attributeValues));
 		}
 		return newList;
+	}
+	
+	public static void removeRedundantData(ArrayList<ID3DataTuple> list){
+		for (int i = 0; i < list.size(); i++) {
+			//System.out.println(i);
+			for (int j = list.size()-1; j > i; j--) {
+				//System.out.println(j);
+				if(list.get(i).equals(list.get(j))) {
+					list.remove(j);
+				}
+			}
+		}
+	}
+
+	public static void partitionInputFiles() {
+		File inputFile = new File("myData/collectedData.txt");
+		File trainingFile = new File("myData/trainingData.txt");
+		File testFile = new File("myData/testData.txt");
+		
+		try {
+			//Calc nbr of lines
+			BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+			int lines = 0;
+			while (reader.readLine() != null) lines++; 
+			reader.close();
+			
+			int amountToMove= (int) (0.2*lines);
+			int delta = lines/amountToMove;
+			//System.out.println("delta: " + delta);
+			
+			reader = new BufferedReader(new FileReader(inputFile));
+			BufferedWriter writerTraining = new BufferedWriter(new FileWriter(trainingFile));
+			BufferedWriter writerTesting = new BufferedWriter(new FileWriter(testFile));
+	
+			String currentLine;
+			int counter = 0;
+			while((currentLine = reader.readLine()) != null) {
+				String trimmedLine = currentLine.trim();
+				if((counter%delta)==0) {
+				    // trim newline
+				    writerTesting.write(trimmedLine + System.getProperty("line.separator"));
+				}
+				else {
+					writerTraining.write(trimmedLine + System.getProperty("line.separator"));
+				}
+				counter++;
+			}
+			writerTraining.close(); 
+			writerTesting.close();
+			reader.close(); 
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

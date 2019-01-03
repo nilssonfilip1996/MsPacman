@@ -33,13 +33,22 @@ public class ID3DataTuple {
 
 	// General game state this - not normalized!
 	public int pacmanPosition;
+	
+//	public boolean wallLeft = true;
+//	public boolean wallRight = true;
+//	public boolean wallUp = true;
+//	public boolean wallDown = true;
+	public boolean wallLeft = true;
+	public boolean wallRight = true;
+	public boolean wallUp = true;
+	public boolean wallDown = true;
 
 	// Ghost this, dir, dist, edible - BLINKY, INKY, PINKY, SUE
 
-	public int blinkyDist = -1;
-	public int inkyDist = -1;
-	public int pinkyDist = -1;
-	public int sueDist = -1;
+	public DiscreteTag blinkyDist = DiscreteTag.NONE;
+	public DiscreteTag inkyDist = DiscreteTag.NONE;
+	public DiscreteTag pinkyDist = DiscreteTag.NONE;
+	public DiscreteTag sueDist = DiscreteTag.NONE;
 
 	public MOVE blinkyDir;
 	public MOVE inkyDir;
@@ -49,7 +58,7 @@ public class ID3DataTuple {
 	public boolean isGhostClose;
 	public int closestGhostDistance;
 	public MOVE directionToClosestPill;
-	public int DISTANCE_CLOSE = 5;
+	public int DISTANCE_CLOSE = 15;
 	public int CLOSE = 20;
 	public int MID = 60;
 	public int FAR = 100;
@@ -57,6 +66,7 @@ public class ID3DataTuple {
 	public boolean isPPClose = false;
 	public MOVE directionToClosestPP;
 	public GHOST closestGhost;
+	public boolean areGhostsEdible = false;
 	// Util data - useful for normalization
 	private int maximumDistance = 150;
 
@@ -72,56 +82,73 @@ public class ID3DataTuple {
 
 		this.DirectionChosen = move;
 
-		this.pacmanPosition = game.getPacmanCurrentNodeIndex();
-
-		if (game.getGhostLairTime(GHOST.BLINKY) == 0) {
-			this.blinkyDist = game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), game.getGhostCurrentNodeIndex(GHOST.BLINKY));
+		MOVE[] availableMoves = game.getPossibleMoves(game.getPacmanCurrentNodeIndex());
+		for (int i = 0; i < availableMoves.length; i++) {
+			if(availableMoves[i]==MOVE.LEFT) wallLeft=false;
+			if(availableMoves[i]==MOVE.RIGHT) wallRight=false;
+			if(availableMoves[i]==MOVE.UP) wallUp=false;
+			if(availableMoves[i]==MOVE.DOWN) wallDown=false;
 		}
+//		System.out.println("Wallleft: " + wallLeft);
+//		System.out.println("WallRight: " + wallRight);
+//		System.out.println("WallUp: " + wallUp);
+//		System.out.println("WallDown: " + wallDown);
+//		System.out.println("----------------");
+		//this.pacmanPosition = game.getPacmanCurrentNodeIndex();
+		
+		
 
-		if (game.getGhostLairTime(GHOST.INKY) == 0) {
-			this.inkyDist = game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), game.getGhostCurrentNodeIndex(GHOST.INKY));
-		}
+//		if (game.getGhostLairTime(GHOST.BLINKY) == 0) {
+//			this.blinkyDist = this.discretizeDistance(game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), game.getGhostCurrentNodeIndex(GHOST.BLINKY)));
+//		}
+//
+//		if (game.getGhostLairTime(GHOST.INKY) == 0) {
+//			this.inkyDist = this.discretizeDistance(game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), game.getGhostCurrentNodeIndex(GHOST.INKY)));
+//		}
+//
+//		if (game.getGhostLairTime(GHOST.PINKY) == 0) {
+//			this.pinkyDist = this.discretizeDistance(game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), game.getGhostCurrentNodeIndex(GHOST.PINKY)));
+//		}
+//
+//		if (game.getGhostLairTime(GHOST.SUE) == 0) {
+//			this.sueDist = this.discretizeDistance(game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), game.getGhostCurrentNodeIndex(GHOST.SUE)));
+//		}
 
-		if (game.getGhostLairTime(GHOST.PINKY) == 0) {
-			this.pinkyDist = game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), game.getGhostCurrentNodeIndex(GHOST.PINKY));
-		}
-
-		if (game.getGhostLairTime(GHOST.SUE) == 0) {
-			this.sueDist = game.getShortestPathDistance(game.getPacmanCurrentNodeIndex(), game.getGhostCurrentNodeIndex(GHOST.SUE));
-		}
-
-		this.blinkyDir = game.getNextMoveTowardsTarget(game.getPacmanCurrentNodeIndex(), game.getGhostCurrentNodeIndex(GHOST.BLINKY), DM.PATH);
-		this.inkyDir = game.getNextMoveTowardsTarget(game.getPacmanCurrentNodeIndex(), game.getGhostCurrentNodeIndex(GHOST.INKY), DM.PATH);
-		this.pinkyDir = game.getNextMoveTowardsTarget(game.getPacmanCurrentNodeIndex(), game.getGhostCurrentNodeIndex(GHOST.PINKY), DM.PATH);
-		this.sueDir = game.getNextMoveTowardsTarget(game.getPacmanCurrentNodeIndex(), game.getGhostCurrentNodeIndex(GHOST.SUE), DM.PATH);
+//		this.blinkyDir = game.getNextMoveTowardsTarget(game.getPacmanCurrentNodeIndex(), game.getGhostCurrentNodeIndex(GHOST.BLINKY), DM.PATH);
+//		this.inkyDir = game.getNextMoveTowardsTarget(game.getPacmanCurrentNodeIndex(), game.getGhostCurrentNodeIndex(GHOST.INKY), DM.PATH);
+//		this.pinkyDir = game.getNextMoveTowardsTarget(game.getPacmanCurrentNodeIndex(), game.getGhostCurrentNodeIndex(GHOST.PINKY), DM.PATH);
+//		this.sueDir = game.getNextMoveTowardsTarget(game.getPacmanCurrentNodeIndex(), game.getGhostCurrentNodeIndex(GHOST.SUE), DM.PATH);
 		
 		this.isGhostClose = game.isGhostClose(DISTANCE_CLOSE);
-		this.closestGhostDistance = game.distanceToClosestGhost();
 		this.directionToClosestPill = game.directionToClosesPill();
-		this.closestGhost = game.closestGhost();
-		this.dirAwayFromClosestGhost = game.getMoveAwayFromThreat(closestGhost);
+		this.dirAwayFromClosestGhost = game.getMoveAwayFromThreat(game.closestGhost());
 		this.isPPClose = game.isPowerPillClose(DISTANCE_CLOSE); 		//Verify
 		this.directionToClosestPP = game.directionToClosestPP();
+		this.areGhostsEdible = game.areGhostsEdible();
+		
 		
 		attributeValues = new String[17];
 		attributeValues[0] = DirectionChosen.name();
-		attributeValues[1] = String.valueOf(pacmanPosition);
-		attributeValues[2] = String.valueOf(blinkyDist);
-		attributeValues[3] = String.valueOf(inkyDist);
-		attributeValues[4] = String.valueOf(pinkyDist);
-		attributeValues[5] = String.valueOf(sueDist);
-		attributeValues[6] = blinkyDir.name();
-		attributeValues[7] = inkyDir.name();
-		attributeValues[8] = pinkyDir.name();
-		attributeValues[9] = sueDir.name();
-		attributeValues[10] = String.valueOf(isGhostClose);
-		attributeValues[11] = String.valueOf(closestGhostDistance);
-		attributeValues[12] = directionToClosestPill.name();
+//		attributeValues[1] = String.valueOf(pacmanPosition);
+//		attributeValues[2] = blinkyDist.name();
+//		attributeValues[3] = inkyDist.name();
+//		attributeValues[4] = pinkyDist.name();
+//		attributeValues[5] = sueDist.name();
+//		attributeValues[6] = blinkyDir.name();
+//		attributeValues[7] = inkyDir.name();
+//		attributeValues[8] = pinkyDir.name();
+//		attributeValues[9] = sueDir.name();
+		attributeValues[1] = String.valueOf(isGhostClose); 
+		attributeValues[2] = directionToClosestPill.name();
 		// add attribute as string
-		attributeValues[13] = closestGhost.name();
-		attributeValues[14] = dirAwayFromClosestGhost.name();
-		attributeValues[15] = String.valueOf(isPPClose);
-		attributeValues[16] = directionToClosestPP.name();
+		attributeValues[3] = dirAwayFromClosestGhost.name();
+		attributeValues[4] = String.valueOf(isPPClose);
+		attributeValues[5] = directionToClosestPP.name();
+		attributeValues[6] = String.valueOf(wallLeft);
+		attributeValues[7] = String.valueOf(wallRight);
+		attributeValues[8] = String.valueOf(wallUp);
+		attributeValues[9] = String.valueOf(wallDown);
+		attributeValues[10] = String.valueOf(areGhostsEdible);
 	}
 
 	/**
@@ -134,45 +161,51 @@ public class ID3DataTuple {
 		attributeValues = dataSplit;
 		this.DirectionChosen = MOVE.valueOf(dataSplit[0]);
 
-		this.pacmanPosition = Integer.parseInt(dataSplit[1]);
-		this.blinkyDist = Integer.parseInt(dataSplit[2]);
-		this.inkyDist = Integer.parseInt(dataSplit[3]);
-		this.pinkyDist = Integer.parseInt(dataSplit[4]);
-		this.sueDist = Integer.parseInt(dataSplit[5]);
-		this.blinkyDir = MOVE.valueOf(dataSplit[6]);
-		this.inkyDir = MOVE.valueOf(dataSplit[7]);
-		this.pinkyDir = MOVE.valueOf(dataSplit[8]);
-		this.sueDir = MOVE.valueOf(dataSplit[9]);
+//		this.pacmanPosition = Integer.parseInt(dataSplit[1]);
+//		this.blinkyDist = DiscreteTag.valueOf(dataSplit[2]);
+//		this.inkyDist = DiscreteTag.valueOf(dataSplit[3]);
+//		this.pinkyDist = DiscreteTag.valueOf(dataSplit[4]);
+//		this.sueDist = DiscreteTag.valueOf(dataSplit[5]);
+//		this.blinkyDir = MOVE.valueOf(dataSplit[6]);
+//		this.inkyDir = MOVE.valueOf(dataSplit[7]);
+//		this.pinkyDir = MOVE.valueOf(dataSplit[8]);
+//		this.sueDir = MOVE.valueOf(dataSplit[9]);
 		//custom attributes		
-		this.isGhostClose = Boolean.parseBoolean(dataSplit[10]);
-		this.closestGhostDistance = Integer.parseInt(dataSplit[11]);
-		this.directionToClosestPill = MOVE.valueOf(dataSplit[12]);
-		this.closestGhost = GHOST.valueOf(dataSplit[13]);
-		this.dirAwayFromClosestGhost = MOVE.valueOf(dataSplit[14]);
-		this.isPPClose = Boolean.parseBoolean(dataSplit[15]);
-		this.directionToClosestPP = MOVE.valueOf(dataSplit[16]);
+		this.isGhostClose = Boolean.parseBoolean(dataSplit[1]);
+		this.directionToClosestPill = MOVE.valueOf(dataSplit[2]);
+		this.dirAwayFromClosestGhost = MOVE.valueOf(dataSplit[3]);
+		this.isPPClose = Boolean.parseBoolean(dataSplit[4]);
+		this.directionToClosestPP = MOVE.valueOf(dataSplit[5]);
+		this.wallLeft = Boolean.parseBoolean(dataSplit[6]);
+		this.wallRight = Boolean.parseBoolean(dataSplit[7]);
+		this.wallUp = Boolean.parseBoolean(dataSplit[8]);
+		this.wallDown = Boolean.parseBoolean(dataSplit[9]);
+		this.areGhostsEdible = Boolean.parseBoolean(dataSplit[10]);
 	}
 
 	public String getSaveString() {
 		StringBuilder stringbuilder = new StringBuilder();
 
 		stringbuilder.append(this.DirectionChosen + ";");
-		stringbuilder.append(this.pacmanPosition + ";");
-		stringbuilder.append(this.blinkyDist + ";");
-		stringbuilder.append(this.inkyDist + ";");
-		stringbuilder.append(this.pinkyDist + ";");
-		stringbuilder.append(this.sueDist + ";");
-		stringbuilder.append(this.blinkyDir + ";");
-		stringbuilder.append(this.inkyDir + ";");
-		stringbuilder.append(this.pinkyDir + ";");
-		stringbuilder.append(this.sueDir + ";");
+//		stringbuilder.append(this.pacmanPosition + ";");
+//		stringbuilder.append(this.blinkyDist + ";");
+//		stringbuilder.append(this.inkyDist + ";");
+//		stringbuilder.append(this.pinkyDist + ";");
+//		stringbuilder.append(this.sueDist + ";");
+//		stringbuilder.append(this.blinkyDir + ";");
+//		stringbuilder.append(this.inkyDir + ";");
+//		stringbuilder.append(this.pinkyDir + ";");
+//		stringbuilder.append(this.sueDir + ";");
 		stringbuilder.append(this.isGhostClose + ";");
-		stringbuilder.append(this.closestGhostDistance + ";"); 		//Not an actual attribute
 		stringbuilder.append(this.directionToClosestPill + ";");
-		stringbuilder.append(this.closestGhost + ";");
 		stringbuilder.append(this.dirAwayFromClosestGhost + ";");
 		stringbuilder.append(this.isPPClose + ";");
 		stringbuilder.append(this.directionToClosestPP + ";");
+		stringbuilder.append(this.wallLeft + ";");
+		stringbuilder.append(this.wallRight + ";");
+		stringbuilder.append(this.wallUp + ";");
+		stringbuilder.append(this.wallDown + ";");
+		stringbuilder.append(this.areGhostsEdible + ";");
 
 		return stringbuilder.toString();
 	}
@@ -249,14 +282,44 @@ public class ID3DataTuple {
 		double aux = this.normalizeCurrentScore(score);
 		return DiscreteTag.DiscretizeDouble(aux);
 	}
+	
+
+	
+	
+
+	
+
 
 	@Override
 	public String toString() {
-		return "ID3DataTuple [DirectionChosen=" + DirectionChosen + ", pacmanPosition=" + pacmanPosition
-				+ ", blinkyDist=" + blinkyDist + ", inkyDist=" + inkyDist + ", pinkyDist=" + pinkyDist + ", sueDist="
-				+ sueDist + ", blinkyDir=" + blinkyDir + ", inkyDir=" + inkyDir + ", pinkyDir=" + pinkyDir + ", sueDir="
-				+ sueDir + ", isGhostClose=" + isGhostClose + ", directionToClosestPill=" + directionToClosestPill
-				+ "distanceToClosestGhost=" + closestGhostDistance + "]";
+		return "ID3DataTuple [DirectionChosen=" + DirectionChosen + ", isGhostClose=" + isGhostClose
+				+ ", directionToClosestPill=" + directionToClosestPill + ", dirAwayFromClosestGhost="
+				+ dirAwayFromClosestGhost + ", isPPClose=" + isPPClose + ", directionToClosestPP="
+				+ directionToClosestPP + "]";
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof ID3DataTuple))
+			return false;
+		ID3DataTuple other = (ID3DataTuple) obj;
+		if (DirectionChosen != other.DirectionChosen)
+			return false;
+		if (dirAwayFromClosestGhost != other.dirAwayFromClosestGhost)
+			return false;
+		if (directionToClosestPP != other.directionToClosestPP)
+			return false;
+		if (directionToClosestPill != other.directionToClosestPill)
+			return false;
+		if (isGhostClose != other.isGhostClose)
+			return false;
+		if (isPPClose != other.isPPClose)
+			return false;
+		return true;
 	}
 
 	

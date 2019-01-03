@@ -1634,15 +1634,15 @@ public final class Game
 //		for(GHOST ghost : GHOST.values()) {
 //			if(getGhostEdibleTime(ghost)==0 && getGhostLairTime(ghost)==0) {
 //				int tempDistance = getShortestPathDistance(currentPacmanNodeIndex,getGhostCurrentNodeIndex(ghost));
-//				if(tempDistance<currentClosest) {
+//				if(tempDistance<currentClosest) { 
 //					currentClosest = tempDistance;
 //					closestGhostNodeIndex = getGhostCurrentNodeIndex(ghost);
 //				}
 //			}
 //		}
 		closestGhostNodeIndex = getGhostCurrentNodeIndex(closestGhost);
-		return getApproximateNextMoveAwayFromTarget(currentPacmanNodeIndex, closestGhostNodeIndex, this.getPacmanLastMoveMade(), DM.PATH);
-		//return getNextMoveAwayFromTarget(currentPacmanNodeIndex, closestGhostNodeIndex, DM.PATH);
+		//return getApproximateNextMoveAwayFromTarget(currentPacmanNodeIndex, closestGhostNodeIndex, this.getPacmanLastMoveMade(), DM.PATH);
+		return getNextMoveAwayFromTarget(currentPacmanNodeIndex, closestGhostNodeIndex, DM.PATH);
 	}
 	
 	public boolean isPowerPillClose(int distTolerance) {
@@ -1693,6 +1693,13 @@ public final class Game
 			}
 		}
 		return currentClosest;
+	}
+	
+	public boolean areGhostsEdible() {
+		for(GHOST ghost : GHOST.values()) {
+			if(this.isGhostEdible(ghost)) return true;
+		}
+		return false;
 	}
 	
 //	//Only last ghost that matters it seams.

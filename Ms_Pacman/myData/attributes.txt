@@ -1,2 +1,10 @@
-10 isGhostClose true false
-12 closestPillDir UP DOWN LEFT RIGHT
+1 isGhostClose true false
+2 closestPillDir UP DOWN LEFT RIGHT
+3 dirAwayFromClosestGhost UP DOWN LEFT RIGHT
+4 isPPClose true false
+5 closestPPDir UP DOWN LEFT RIGHT
+6 wallLeft true false
+7 wallRight true false
+8 wallUp true false
+9 wallDown true false
+10 ghostsEdible true false

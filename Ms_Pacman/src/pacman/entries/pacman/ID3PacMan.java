@@ -18,13 +18,31 @@ public class ID3PacMan extends Controller<MOVE>{
 	public ID3PacMan() {
 		super();
 		//Initialize tuples- and attributeList.
+		
 		ArrayList<ID3DataTuple> tuples = HelperClass.getALFromFile("myData/trainingData.txt");
+		HelperClass.removeRedundantData(tuples);
+		//System.out.println(tuples.size());
+//		int leftC = 0;
+//		int rightC = 0;
+//		int upC = 0;
+//		int downC = 0;
+//		for (int i = 0; i < tuples.size(); i++) {
+//			if(tuples.get(i).DirectionChosen==MOVE.LEFT) leftC++; 
+//			if(tuples.get(i).DirectionChosen==MOVE.RIGHT) rightC++;
+//			if(tuples.get(i).DirectionChosen==MOVE.UP) upC++;
+//			if(tuples.get(i).DirectionChosen==MOVE.DOWN) downC++;
+//		}
+//		System.out.println(leftC);
+//		System.out.println(rightC);
+//		System.out.println(upC);
+//		System.out.println(downC);
 		ArrayList<Attribute> attributes = HelperClass.generateAttributes();
 		ArrayList<Attribute> attributesTemp = HelperClass.getAttributeListCopy(attributes);
 		rootNode = generateTree(tuples, attributes);
 		rootNode.PrintPretty("", true);
 		
 		ArrayList<ID3DataTuple> tuplesTest = HelperClass.getALFromFile("myData/testData.txt");
+		HelperClass.removeRedundantData(tuplesTest);
 		int totalSize = tuplesTest.size();
 		int correctCounter = 0;
 		for (int i = 0; i < tuplesTest.size(); i++) {
@@ -88,10 +106,12 @@ public class ID3PacMan extends Controller<MOVE>{
 	public String predictClassLabel(Node node, ID3DataTuple tuple) {
 		String prediction = "";
 		if(node.getChildrenNodes().isEmpty()) {
+			//System.out.println(node.getClassLabel());
 			return node.getClassLabel();
 		}
 		int index = node.getAttribute().getIndex();
 		String tupleFieldValue = tuple.getAttributeValueAt(index);
+		//System.out.print(tupleFieldValue + "-");
 		ArrayList<Node> childrenNodes = node.getChildrenNodes();
 		for (int i = 0; i < childrenNodes.size(); i++) {
 			if(childrenNodes.get(i).getBranchName().equals(tupleFieldValue)) {

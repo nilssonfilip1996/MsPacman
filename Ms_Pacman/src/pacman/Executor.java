@@ -50,16 +50,18 @@ public class Executor
 	public static void main(String[] args)
 	{
 		Executor exec=new Executor();
-		boolean visual=true;
+		boolean visual=true; 
 		int numTrials=10;			// trials for testing
 		
+		
 		// ********* OUR MS PACMAN **********
-		//exec.runGameTimed(new ID3PacMan(),new StarterGhosts(),visual);
+		HelperClass.partitionInputFiles();
+		exec.runGameTimed(new ID3PacMan(),new StarterGhosts(),visual);
 		
 		// ********* DATA COLLECTION ********
 		//String fileName = "testData.txt";
-		String fileName = "trainingData.txt";
-		exec.runGameTimed(new DataCollectorController(new KeyBoardInput(), fileName),new StarterGhosts(),visual);
+		String fileName = "collectedData.txt";
+		//exec.runGameTimed(new DataCollectorController(new KeyBoardInput(), fileName),new StarterGhosts(),visual);
 		
 		// ********* TRIAL IN BATCH MODE ****	
 		//exec.runExperiment(new ID3PacMan(),new StarterGhosts(),numTrials);
