@@ -7,6 +7,7 @@ import id3.id3Pojo.Attribute;
 import id3.id3Pojo.Node;
 import id3.id3Utilities.HelperClass;
 import pacman.controllers.Controller;
+import pacman.game.Constants.DM;
 import pacman.game.Constants.MOVE;
 import pacman.game.Game;
 
@@ -127,18 +128,19 @@ public class ID3PacMan extends Controller<MOVE>{
 		// ID3 is called and after execution returns a move	
 		ID3DataTuple tuple = new ID3DataTuple(game, pacManMove);
 		String pred = predictClassLabel(rootNode, tuple);
+		System.out.println(pred);
 		//System.out.println(pred);
-		if(pred.equals("UP")) {
-			pacManMove = MOVE.UP;
+		if(pred.equals("RUNAWAY")) {
+			pacManMove = tuple.dirAwayFromClosestGhost;
 		}
-		if(pred.equals("DOWN")) {
-			pacManMove = MOVE.DOWN;
+		if(pred.equals("CHASE")) {
+			pacManMove = game.getNextMoveTowardsTarget(game.getPacmanCurrentNodeIndex(), game.getGhostCurrentNodeIndex(game.closestGhost()), DM.PATH);
 		}
-		if(pred.equals("LEFT")) {
-			pacManMove = MOVE.LEFT;
+		if(pred.equals("EATPILLS")) {
+			pacManMove = tuple.directionToClosestPill;
 		}
-		if(pred.equals("RIGHT")) {
-			pacManMove = MOVE.RIGHT;
+		if(pred.equals("EATPOWERPILL")) {
+			pacManMove = tuple.directionToClosestPP;
 		}
 		return pacManMove;
 	}

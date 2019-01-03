@@ -1630,20 +1630,10 @@ public final class Game
 	
 	public MOVE getMoveAwayFromThreat(GHOST closestGhost) {
 		int currentPacmanNodeIndex=getPacmanCurrentNodeIndex();
-		int currentClosest = Integer.MAX_VALUE;
 		int closestGhostNodeIndex = 0;
-//		for(GHOST ghost : GHOST.values()) {
-//			if(getGhostEdibleTime(ghost)==0 && getGhostLairTime(ghost)==0) {
-//				int tempDistance = getShortestPathDistance(currentPacmanNodeIndex,getGhostCurrentNodeIndex(ghost));
-//				if(tempDistance<currentClosest) { 
-//					currentClosest = tempDistance;
-//					closestGhostNodeIndex = getGhostCurrentNodeIndex(ghost);
-//				}
-//			}
-//		}
 		closestGhostNodeIndex = getGhostCurrentNodeIndex(closestGhost);
-		//return getApproximateNextMoveAwayFromTarget(currentPacmanNodeIndex, closestGhostNodeIndex, this.getPacmanLastMoveMade(), DM.PATH);
-		return getNextMoveAwayFromTarget(currentPacmanNodeIndex, closestGhostNodeIndex, DM.PATH);
+		return getApproximateNextMoveAwayFromTarget(currentPacmanNodeIndex, closestGhostNodeIndex, this.getPacmanLastMoveMade(), DM.PATH);
+		//return getNextMoveAwayFromTarget(currentPacmanNodeIndex, closestGhostNodeIndex, DM.PATH);
 	}
 	
 	public boolean isPowerPillClose(int distTolerance) {
@@ -1696,19 +1686,29 @@ public final class Game
 		return currentClosest;
 	}
 	
-	public boolean areGhostsEdible() {
-		for(GHOST ghost : GHOST.values()) {
-			if(this.isGhostEdible(ghost)) return true;
-		}
+//	public boolean areGhostsEdible() {
+//		for(GHOST ghost : GHOST.values()) {
+//			if(this.isGhostEdible(ghost)) return true;
+//		}
+//		return false;
+//	}
+	
+	public boolean isClosestGhostEdible() {
+		GHOST closestGhost = closestGhost();
+		if(this.isGhostEdible(closestGhost)) return true;
+		
 		return false;
 	}
 	
 	public STRATEGY getStrategy(int distTolerance) {
 		boolean ghostClose = isGhostClose(distTolerance);
 		GHOST closestGhost = closestGhost();
-		System.out.println(closestGhost);
 		//If ghostclose and edible -->Chase
 		if(ghostClose && isGhostEdible(closestGhost)) return STRATEGY.CHASE;
+		
+		//if distPP<distclosestGhost
+		int distClosestGhost = getShortestPathDistance(getPacmanCurrentNodeIndex(),getGhostCurrentNodeIndex(closestGhost));
+		if(ghostClose && isPowerPillClose(distClosestGhost)) return STRATEGY.EATPOWERPILL;
 		
 		//if ghostclose and not edible --> runaway
 		if(ghostClose) return STRATEGY.RUNAWAY;

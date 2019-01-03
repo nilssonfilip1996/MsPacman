@@ -59,7 +59,7 @@ public class ID3DataTuple {
 	public boolean isGhostClose;
 	public int closestGhostDistance;
 	public MOVE directionToClosestPill;
-	public int DISTANCE_CLOSE = 30;
+	public int DISTANCE_CLOSE = 40;
 	public int CLOSE = 20;
 	public int MID = 60;
 	public int FAR = 100;
@@ -67,7 +67,7 @@ public class ID3DataTuple {
 	public boolean isPPClose = false;
 	public MOVE directionToClosestPP;
 	public GHOST closestGhost;
-	public boolean areGhostsEdible = false;
+	public boolean closestGhostEdible = false;
 	// Util data - useful for normalization
 	private int maximumDistance = 150;
 
@@ -82,7 +82,7 @@ public class ID3DataTuple {
 		}
 
 		this.strategyChosen = game.getStrategy(DISTANCE_CLOSE);
-		System.out.println(strategyChosen);
+		//System.out.println(strategyChosen);
 
 		MOVE[] availableMoves = game.getPossibleMoves(game.getPacmanCurrentNodeIndex());
 		for (int i = 0; i < availableMoves.length; i++) {
@@ -126,7 +126,7 @@ public class ID3DataTuple {
 		this.dirAwayFromClosestGhost = game.getMoveAwayFromThreat(game.closestGhost());
 		this.isPPClose = game.isPowerPillClose(DISTANCE_CLOSE); 		//Verify
 		this.directionToClosestPP = game.directionToClosestPP();
-		this.areGhostsEdible = game.areGhostsEdible();
+		this.closestGhostEdible = game.isClosestGhostEdible();
 		
 		
 		attributeValues = new String[17];
@@ -150,7 +150,7 @@ public class ID3DataTuple {
 		attributeValues[7] = String.valueOf(wallRight);
 		attributeValues[8] = String.valueOf(wallUp);
 		attributeValues[9] = String.valueOf(wallDown);
-		attributeValues[10] = String.valueOf(areGhostsEdible);
+		attributeValues[10] = String.valueOf(closestGhostEdible);
 	}
 
 	/**
@@ -182,7 +182,7 @@ public class ID3DataTuple {
 		this.wallRight = Boolean.parseBoolean(dataSplit[7]);
 		this.wallUp = Boolean.parseBoolean(dataSplit[8]);
 		this.wallDown = Boolean.parseBoolean(dataSplit[9]);
-		this.areGhostsEdible = Boolean.parseBoolean(dataSplit[10]);
+		this.closestGhostEdible = Boolean.parseBoolean(dataSplit[10]);
 	}
 
 	public String getSaveString() {
@@ -207,7 +207,7 @@ public class ID3DataTuple {
 		stringbuilder.append(this.wallRight + ";");
 		stringbuilder.append(this.wallUp + ";");
 		stringbuilder.append(this.wallDown + ";");
-		stringbuilder.append(this.areGhostsEdible + ";");
+		stringbuilder.append(this.closestGhostEdible + ";");
 
 		return stringbuilder.toString();
 	}
@@ -301,6 +301,17 @@ public class ID3DataTuple {
 	}
 
 	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (closestGhostEdible ? 1231 : 1237);
+		result = prime * result + (isGhostClose ? 1231 : 1237);
+		result = prime * result + (isPPClose ? 1231 : 1237);
+		result = prime * result + ((strategyChosen == null) ? 0 : strategyChosen.hashCode());
+		return result;
+	}
+
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -309,21 +320,23 @@ public class ID3DataTuple {
 		if (!(obj instanceof ID3DataTuple))
 			return false;
 		ID3DataTuple other = (ID3DataTuple) obj;
-		if (strategyChosen != other.strategyChosen)
-			return false;
-		if (dirAwayFromClosestGhost != other.dirAwayFromClosestGhost)
-			return false;
-		if (directionToClosestPP != other.directionToClosestPP)
-			return false;
-		if (directionToClosestPill != other.directionToClosestPill)
+		if (closestGhostEdible != other.closestGhostEdible)
 			return false;
 		if (isGhostClose != other.isGhostClose)
 			return false;
 		if (isPPClose != other.isPPClose)
 			return false;
+		if (strategyChosen != other.strategyChosen)
+			return false;
 		return true;
 	}
+	
+	
 
+	
+	
+	
+	
 	
 
 	
