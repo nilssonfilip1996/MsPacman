@@ -1601,7 +1601,7 @@ public final class Game
 		int current=getPacmanCurrentNodeIndex();
 		boolean isGhostClose = false;
 		for(GHOST ghost : GHOST.values())
-			if(getGhostEdibleTime(ghost)==0 && getGhostLairTime(ghost)==0)
+			if(getGhostLairTime(ghost)==0)
 				if(getShortestPathDistance(current,getGhostCurrentNodeIndex(ghost))<distTolerance) {
 					isGhostClose = true;
 					break;				//Added
@@ -1617,7 +1617,7 @@ public final class Game
 		int currentClosest = Integer.MAX_VALUE;
 		GHOST closestGhost = GHOST.BLINKY;			//Default
 		for(GHOST ghost : GHOST.values())
-			if(getGhostEdibleTime(ghost)==0 && getGhostLairTime(ghost)==0) {
+			if(getGhostLairTime(ghost)==0) {
 				int tempDistance = getShortestPathDistance(current,getGhostCurrentNodeIndex(ghost));
 				if(tempDistance<currentClosest) {
 					closestGhost = ghost;
@@ -1671,7 +1671,7 @@ public final class Game
 			if(isPowerPillStillAvailable(i))
 				targets.add(powerPills[i]);				
 		
-		int[] targetsArray=new int[targets.size()];		//convert from ArrayList to array
+		int[] targetsArray=new int[targets.size()];		//convert from ArrayList to array 
 		
 		for(int i=0;i<targetsArray.length;i++)
 			targetsArray[i]=targets.get(i);
@@ -1685,7 +1685,7 @@ public final class Game
 		int currentPacmanNodeIndex=getPacmanCurrentNodeIndex();
 		int currentClosest = Integer.MAX_VALUE;
 		for(GHOST ghost : GHOST.values()) {
-			if(getGhostEdibleTime(ghost)==0 && getGhostLairTime(ghost)==0) {
+			if(getGhostLairTime(ghost)==0) {
 				int tempDistance = getShortestPathDistance(currentPacmanNodeIndex,getGhostCurrentNodeIndex(ghost));
 				if(tempDistance<currentClosest) {
 					currentClosest = tempDistance;

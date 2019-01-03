@@ -58,7 +58,7 @@ public class ID3DataTuple {
 	public boolean isGhostClose;
 	public int closestGhostDistance;
 	public MOVE directionToClosestPill;
-	public int DISTANCE_CLOSE = 15;
+	public int DISTANCE_CLOSE = 30;
 	public int CLOSE = 20;
 	public int MID = 60;
 	public int FAR = 100;
