@@ -54,12 +54,12 @@ public class Executor
 		int numTrials=10;			// trials for testing
 		
 		// ********* OUR MS PACMAN **********
-		exec.runGameTimed(new ID3PacMan(),new StarterGhosts(),visual);
+		//exec.runGameTimed(new ID3PacMan(),new StarterGhosts(),visual);
 		
 		// ********* DATA COLLECTION ********
 		//String fileName = "testData.txt";
 		String fileName = "trainingData.txt";
-		//exec.runGameTimed(new DataCollectorController(new KeyBoardInput(), fileName),new StarterGhosts(),visual);
+		exec.runGameTimed(new DataCollectorController(new KeyBoardInput(), fileName),new StarterGhosts(),visual);
 		
 		// ********* TRIAL IN BATCH MODE ****	
 		//exec.runExperiment(new ID3PacMan(),new StarterGhosts(),numTrials);
