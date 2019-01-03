@@ -14,7 +14,7 @@ public final class Constants
 	 * a controller is required to supply one of the 5 actions available. If the 
 	 * controller replies NEUTRAL or does not reply in time, the previous action is 
 	 * repeated. If the previous action is not a legal move, a legal move is chosen 
-	 * uniformly at random.
+	 * uniformly at random. 
 	 */
 	public enum MOVE 
 	{
@@ -26,6 +26,12 @@ public final class Constants
 		
 		public abstract MOVE opposite();
 	};
+	
+	public enum STRATEGY{
+		RUNAWAY,
+		CHASE,
+		EATPILLS
+	}
 	
 	/**
 	 * Enumeration for the ghosts. The integer arguments are the initial lair times.

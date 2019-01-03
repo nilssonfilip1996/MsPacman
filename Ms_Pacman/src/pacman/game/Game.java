@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import pacman.game.Constants.DM;
 import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
+import pacman.game.Constants.STRATEGY;
 import pacman.game.internal.Ghost;
 import pacman.game.internal.Maze;
 import pacman.game.internal.Node;
@@ -1601,7 +1602,7 @@ public final class Game
 		int current=getPacmanCurrentNodeIndex();
 		boolean isGhostClose = false;
 		for(GHOST ghost : GHOST.values())
-			if(getGhostEdibleTime(ghost)==0 && getGhostLairTime(ghost)==0)
+			if(getGhostLairTime(ghost)==0)
 				if(getShortestPathDistance(current,getGhostCurrentNodeIndex(ghost))<distTolerance) {
 					isGhostClose = true;
 					break;				//Added
@@ -1617,7 +1618,7 @@ public final class Game
 		int currentClosest = Integer.MAX_VALUE;
 		GHOST closestGhost = GHOST.BLINKY;			//Default
 		for(GHOST ghost : GHOST.values())
-			if(getGhostEdibleTime(ghost)==0 && getGhostLairTime(ghost)==0) {
+			if(getGhostLairTime(ghost)==0) {
 				int tempDistance = getShortestPathDistance(current,getGhostCurrentNodeIndex(ghost));
 				if(tempDistance<currentClosest) {
 					closestGhost = ghost;
@@ -1700,6 +1701,20 @@ public final class Game
 			if(this.isGhostEdible(ghost)) return true;
 		}
 		return false;
+	}
+	
+	public STRATEGY getStrategy(int distTolerance) {
+		boolean ghostClose = isGhostClose(distTolerance);
+		GHOST closestGhost = closestGhost();
+		System.out.println(closestGhost);
+		//If ghostclose and edible -->Chase
+		if(ghostClose && isGhostEdible(closestGhost)) return STRATEGY.CHASE;
+		
+		//if ghostclose and not edible --> runaway
+		if(ghostClose) return STRATEGY.RUNAWAY;
+		
+		//else eatpill
+		return STRATEGY.EATPILLS;
 	}
 	
 //	//Only last ghost that matters it seams.

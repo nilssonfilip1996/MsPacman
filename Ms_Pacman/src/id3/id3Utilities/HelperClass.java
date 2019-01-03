@@ -47,7 +47,7 @@ public class HelperClass {
 			return true;
 		}
 		for (int i = 0; i < tuples.size() - 1; i++) {
-			if (!(tuples.get(i).DirectionChosen.name().equals(tuples.get(i + 1).DirectionChosen.name()))) {
+			if (!(tuples.get(i).strategyChosen.name().equals(tuples.get(i + 1).strategyChosen.name()))) {
 				return false;
 			}
 		}
@@ -58,7 +58,7 @@ public class HelperClass {
 		int[] counter = new int[Settings.CLASS_LABELS.length];
 		for (int i = 0; i < tuples.size(); i++) {
 			for (int j = 0; j < Settings.CLASS_LABELS.length; j++) {
-				if (tuples.get(i).DirectionChosen.name().equals(Settings.CLASS_LABELS[j])) { 
+				if (tuples.get(i).strategyChosen.name().equals(Settings.CLASS_LABELS[j])) { 
 					counter[j]++;
 					break;
 				}

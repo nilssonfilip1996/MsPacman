@@ -48,7 +48,7 @@ public class ID3PacMan extends Controller<MOVE>{
 		for (int i = 0; i < tuplesTest.size(); i++) {
 			String pred = predictClassLabel(rootNode, tuplesTest.get(i));
 			//System.out.println("predicted: " + pred + ", Correct: " + tuplesTest.get(i).DirectionChosen.name());
-			if(pred.equals(tuplesTest.get(i).DirectionChosen.name())) {
+			if(pred.equals(tuplesTest.get(i).strategyChosen.name())) {
 				correctCounter++;
 			}
 		}

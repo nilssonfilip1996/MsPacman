@@ -6,6 +6,7 @@ import pacman.game.Constants;
 import pacman.game.Constants.DM;
 import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
+import pacman.game.Constants.STRATEGY;
 import pacman.game.Game;
 
 public class ID3DataTuple {
@@ -29,7 +30,7 @@ public class ID3DataTuple {
 
 	private String[] attributeValues;
 	
-	public MOVE DirectionChosen;
+	public STRATEGY strategyChosen;
 
 	// General game state this - not normalized!
 	public int pacmanPosition;
@@ -58,7 +59,7 @@ public class ID3DataTuple {
 	public boolean isGhostClose;
 	public int closestGhostDistance;
 	public MOVE directionToClosestPill;
-	public int DISTANCE_CLOSE = 15;
+	public int DISTANCE_CLOSE = 30;
 	public int CLOSE = 20;
 	public int MID = 60;
 	public int FAR = 100;
@@ -80,7 +81,8 @@ public class ID3DataTuple {
 			move = game.getPacmanLastMoveMade();
 		}
 
-		this.DirectionChosen = move;
+		this.strategyChosen = game.getStrategy(DISTANCE_CLOSE);
+		System.out.println(strategyChosen);
 
 		MOVE[] availableMoves = game.getPossibleMoves(game.getPacmanCurrentNodeIndex());
 		for (int i = 0; i < availableMoves.length; i++) {
@@ -128,7 +130,7 @@ public class ID3DataTuple {
 		
 		
 		attributeValues = new String[17];
-		attributeValues[0] = DirectionChosen.name();
+		attributeValues[0] = strategyChosen.name();
 //		attributeValues[1] = String.valueOf(pacmanPosition);
 //		attributeValues[2] = blinkyDist.name();
 //		attributeValues[3] = inkyDist.name();
@@ -159,7 +161,7 @@ public class ID3DataTuple {
 	public ID3DataTuple(String data) {
 		String[] dataSplit = data.split(";");
 		attributeValues = dataSplit;
-		this.DirectionChosen = MOVE.valueOf(dataSplit[0]);
+		this.strategyChosen = STRATEGY.valueOf(dataSplit[0]);
 
 //		this.pacmanPosition = Integer.parseInt(dataSplit[1]);
 //		this.blinkyDist = DiscreteTag.valueOf(dataSplit[2]);
@@ -186,7 +188,7 @@ public class ID3DataTuple {
 	public String getSaveString() {
 		StringBuilder stringbuilder = new StringBuilder();
 
-		stringbuilder.append(this.DirectionChosen + ";");
+		stringbuilder.append(this.strategyChosen + ";");
 //		stringbuilder.append(this.pacmanPosition + ";");
 //		stringbuilder.append(this.blinkyDist + ";");
 //		stringbuilder.append(this.inkyDist + ";");
@@ -292,7 +294,7 @@ public class ID3DataTuple {
 
 	@Override
 	public String toString() {
-		return "ID3DataTuple [DirectionChosen=" + DirectionChosen + ", isGhostClose=" + isGhostClose
+		return "ID3DataTuple [DirectionChosen=" + strategyChosen + ", isGhostClose=" + isGhostClose
 				+ ", directionToClosestPill=" + directionToClosestPill + ", dirAwayFromClosestGhost="
 				+ dirAwayFromClosestGhost + ", isPPClose=" + isPPClose + ", directionToClosestPP="
 				+ directionToClosestPP + "]";
@@ -307,7 +309,7 @@ public class ID3DataTuple {
 		if (!(obj instanceof ID3DataTuple))
 			return false;
 		ID3DataTuple other = (ID3DataTuple) obj;
-		if (DirectionChosen != other.DirectionChosen)
+		if (strategyChosen != other.strategyChosen)
 			return false;
 		if (dirAwayFromClosestGhost != other.dirAwayFromClosestGhost)
 			return false;
