@@ -21,22 +21,9 @@ public class ID3PacMan extends Controller<MOVE>{
 		//Initialize tuples- and attributeList.
 		
 		ArrayList<ID3DataTuple> tuples = HelperClass.getALFromFile("myData/trainingData.txt");
+		//System.out.println(tuples.size());
 		HelperClass.removeRedundantData(tuples);
 		//System.out.println(tuples.size());
-//		int leftC = 0;
-//		int rightC = 0;
-//		int upC = 0;
-//		int downC = 0;
-//		for (int i = 0; i < tuples.size(); i++) {
-//			if(tuples.get(i).DirectionChosen==MOVE.LEFT) leftC++; 
-//			if(tuples.get(i).DirectionChosen==MOVE.RIGHT) rightC++;
-//			if(tuples.get(i).DirectionChosen==MOVE.UP) upC++;
-//			if(tuples.get(i).DirectionChosen==MOVE.DOWN) downC++;
-//		}
-//		System.out.println(leftC);
-//		System.out.println(rightC);
-//		System.out.println(upC);
-//		System.out.println(downC);
 		ArrayList<Attribute> attributes = HelperClass.generateAttributes();
 		ArrayList<Attribute> attributesTemp = HelperClass.getAttributeListCopy(attributes);
 		rootNode = generateTree(tuples, attributes);
@@ -48,7 +35,7 @@ public class ID3PacMan extends Controller<MOVE>{
 		int correctCounter = 0;
 		for (int i = 0; i < tuplesTest.size(); i++) {
 			String pred = predictClassLabel(rootNode, tuplesTest.get(i));
-			//System.out.println("predicted: " + pred + ", Correct: " + tuplesTest.get(i).DirectionChosen.name());
+			System.out.println("predicted: " + pred + ", Correct: " + tuplesTest.get(i).strategyChosen.name());
 			if(pred.equals(tuplesTest.get(i).strategyChosen.name())) {
 				correctCounter++;
 			}
@@ -79,7 +66,6 @@ public class ID3PacMan extends Controller<MOVE>{
 			return node;
 		}
 		Attribute attr = HelperClass.attributeSelection(tuples, attributes);
-		//HelperClass.removeAttribute(attributes, attr);
 		node.setAttribute(attr);
 		ArrayList<ArrayList<ID3DataTuple>> splitData = HelperClass.splitData(tuples, attr);
 		for (int i = 0; i < splitData.size(); i++) {
@@ -107,12 +93,12 @@ public class ID3PacMan extends Controller<MOVE>{
 	public String predictClassLabel(Node node, ID3DataTuple tuple) {
 		String prediction = "";
 		if(node.getChildrenNodes().isEmpty()) {
-			//System.out.println(node.getClassLabel());
+			System.out.println(node.getClassLabel());
 			return node.getClassLabel();
 		}
 		int index = node.getAttribute().getIndex();
 		String tupleFieldValue = tuple.getAttributeValueAt(index);
-		//System.out.print(tupleFieldValue + "-");
+		System.out.print(tupleFieldValue + "-");
 		ArrayList<Node> childrenNodes = node.getChildrenNodes();
 		for (int i = 0; i < childrenNodes.size(); i++) {
 			if(childrenNodes.get(i).getBranchName().equals(tupleFieldValue)) {
@@ -129,18 +115,18 @@ public class ID3PacMan extends Controller<MOVE>{
 		ID3DataTuple tuple = new ID3DataTuple(game, pacManMove);
 		String pred = predictClassLabel(rootNode, tuple);
 		System.out.println(pred);
-		//System.out.println(pred);
 		if(pred.equals("RUNAWAY")) {
-			pacManMove = tuple.dirAwayFromClosestGhost;
+			//This mf is not doing what is supposed to!
+			pacManMove = game.getMoveAwayFromThreat();
 		}
 		if(pred.equals("CHASE")) {
 			pacManMove = game.getNextMoveTowardsTarget(game.getPacmanCurrentNodeIndex(), game.getGhostCurrentNodeIndex(game.closestGhost()), DM.PATH);
 		}
 		if(pred.equals("EATPILLS")) {
-			pacManMove = tuple.directionToClosestPill;
+			pacManMove = game.directionToClosesPill();
 		}
 		if(pred.equals("EATPOWERPILL")) {
-			pacManMove = tuple.directionToClosestPP;
+			pacManMove = game.directionToClosestPP();
 		}
 		return pacManMove;
 	}

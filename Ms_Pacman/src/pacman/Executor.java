@@ -55,7 +55,7 @@ public class Executor
 		
 		
 		// ********* OUR MS PACMAN **********
-//		HelperClass.partitionInputFiles();
+		HelperClass.partitionInputFiles();
 		exec.runGameTimed(new ID3PacMan(),new StarterGhosts(),visual);
 		
 		// ********* DATA COLLECTION ********
