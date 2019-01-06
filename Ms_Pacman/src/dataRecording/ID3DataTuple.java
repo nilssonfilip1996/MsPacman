@@ -35,7 +35,7 @@ public class ID3DataTuple {
 	// General game state this - not normalized!
 
 	public boolean isGhostClose;
-	public int DISTANCE_CLOSE = 35;
+	public int DISTANCE_CLOSE = 18;
 	public boolean isPPClose = false;
 	public boolean closestGhostEdible = false;
 	// Util data - useful for normalization
@@ -161,7 +161,15 @@ public class ID3DataTuple {
 		double aux = this.normalizeCurrentScore(score);
 		return DiscreteTag.DiscretizeDouble(aux);
 	}
+	
+	
 
+
+	@Override
+	public String toString() {
+		return "ID3DataTuple [strategyChosen=" + strategyChosen + ", isGhostClose=" + isGhostClose + ", isPPClose="
+				+ isPPClose + ", closestGhostEdible=" + closestGhostEdible + "]";
+	}
 
 	@Override
 	public boolean equals(Object obj) {

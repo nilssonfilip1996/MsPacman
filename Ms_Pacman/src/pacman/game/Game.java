@@ -1585,7 +1585,7 @@ public final class Game {
 		if(closestGhost==null) return MOVE.NEUTRAL;
 		closestGhostNodeIndex = getGhostCurrentNodeIndex(closestGhost);
 		//System.out.println("Pacman: " + currentPacmanNodeIndex + ", ghost: " + closestGhostNodeIndex + ", dist: " + getDistance(currentPacmanNodeIndex, closestGhostNodeIndex, DM.PATH));
-		MOVE moveToMake = getNextMoveAwayFromTarget(currentPacmanNodeIndex, closestGhostNodeIndex, this.getPacmanLastMoveMade(), DM.PATH);
+		MOVE moveToMake = getNextMoveAwayFromTarget(currentPacmanNodeIndex, closestGhostNodeIndex, this.getPacmanLastMoveMade(), DM.MANHATTAN);
 		return moveToMake;
 	}
 

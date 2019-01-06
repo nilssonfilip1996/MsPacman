@@ -9,10 +9,12 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import dataRecording.ID3DataTuple;
 import id3.id3Main.Settings;
@@ -210,6 +212,28 @@ public class HelperClass {
 				}
 			}
 		}
+	}
+	public static void removeRedundantDataFromFile(String fileName) {
+		BufferedReader reader;
+		try {
+			reader = new BufferedReader(new FileReader(fileName));
+		    Set<String> lines = new HashSet<String>(10000); // maybe should be bigger
+		    String line;
+		    while ((line = reader.readLine()) != null) {
+		        lines.add(line);
+		    }
+		    reader.close();
+		    BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
+		    for (String unique : lines) {
+		        writer.write(unique);
+		        writer.newLine();
+		    }
+		    writer.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("Done");
 	}
 
 	public static void partitionInputFiles() {

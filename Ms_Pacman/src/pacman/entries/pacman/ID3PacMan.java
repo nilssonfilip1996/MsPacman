@@ -40,7 +40,7 @@ public class ID3PacMan extends Controller<MOVE>{
 				correctCounter++;
 			}
 		}
-		System.out.println("Correct/total " + correctCounter + "/" + totalSize + " gives the accuracy: " + (double)correctCounter/totalSize);
+		System.out.println("Correct/total " + correctCounter + "/" + totalSize + " gives the accuracy: " + (double)correctCounter/totalSize*100 + "%");
 //		for (int i = 0; i < attributesTemp.size(); i++) {
 //			System.out.println("Attribute: " + attributesTemp.get(i).getName() + ", calculated: " + HelperClass.informationGain(tuples, attributesTemp.get(i)));
 //		}
@@ -57,7 +57,7 @@ public class ID3PacMan extends Controller<MOVE>{
 	private Node generateTree(ArrayList<ID3DataTuple> tuples, ArrayList<Attribute> attributes) {
 		Node node = new Node();
 		String majorityClassStr = HelperClass.getMajorityClassInList(tuples);
-		if(HelperClass.doTuplesHaveSameClass(tuples)) { 		//All tuples have same class label.(Yes or No).
+		if(HelperClass.doTuplesHaveSameClass(tuples)) { 		//All tuples have same class label.
 			node.setClassLabel(majorityClassStr);
 			return node;
 		}
@@ -93,12 +93,12 @@ public class ID3PacMan extends Controller<MOVE>{
 	public String predictClassLabel(Node node, ID3DataTuple tuple) {
 		String prediction = "";
 		if(node.getChildrenNodes().isEmpty()) {
-			System.out.println(node.getClassLabel());
+			//System.out.println(node.getClassLabel());
 			return node.getClassLabel();
 		}
 		int index = node.getAttribute().getIndex();
 		String tupleFieldValue = tuple.getAttributeValueAt(index);
-		System.out.print(tupleFieldValue + "-");
+		//System.out.print(tupleFieldValue + "-");
 		ArrayList<Node> childrenNodes = node.getChildrenNodes();
 		for (int i = 0; i < childrenNodes.size(); i++) {
 			if(childrenNodes.get(i).getBranchName().equals(tupleFieldValue)) {
@@ -114,10 +114,11 @@ public class ID3PacMan extends Controller<MOVE>{
 		// ID3 is called and after execution returns a move	
 		ID3DataTuple tuple = new ID3DataTuple(game, pacManMove);
 		String pred = predictClassLabel(rootNode, tuple);
-		System.out.println(pred);
+		//System.out.println(pred);
 		if(pred.equals("RUNAWAY")) {
 			//This mf is not doing what is supposed to!
 			pacManMove = game.getMoveAwayFromThreat();
+			//System.out.println(pacManMove);
 		}
 		if(pred.equals("CHASE")) {
 			pacManMove = game.getNextMoveTowardsTarget(game.getPacmanCurrentNodeIndex(), game.getGhostCurrentNodeIndex(game.closestGhost()), DM.PATH);

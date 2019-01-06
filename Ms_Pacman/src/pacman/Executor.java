@@ -51,19 +51,20 @@ public class Executor
 	{
 		Executor exec=new Executor();
 		boolean visual=true; 
-		int numTrials=10;			// trials for testing
+		int numTrials=100;			// trials for testing
 		
 		
 		// ********* OUR MS PACMAN **********
 		HelperClass.partitionInputFiles();
-		exec.runGameTimed(new ID3PacMan(),new StarterGhosts(),visual);
+		//exec.runGameTimed(new ID3PacMan(),new StarterGhosts(),visual);
 		
 		// ********* DATA COLLECTION ********
 		String fileName = "collectedData.txt";
-//		exec.runGameTimed(new DataCollectorController(new KeyBoardInput(), fileName),new StarterGhosts(),visual);
+		//exec.runGameTimed(new DataCollectorController(new KeyBoardInput(), fileName),new StarterGhosts(),visual);
+		//HelperClass.removeRedundantDataFromFile("myData/collectedData.txt");
 		
 		// ********* TRIAL IN BATCH MODE ****	
-		//exec.runExperiment(new ID3PacMan(),new StarterGhosts(),numTrials);
+		exec.runExperiment(new ID3PacMan(),new StarterGhosts(),numTrials);
 		//exec.runExperiment(new StarterPacMan(),new StarterGhosts(),numTrials);
 		
 		/*
